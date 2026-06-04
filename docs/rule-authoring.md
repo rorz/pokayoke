@@ -58,7 +58,29 @@ The rule context should expose:
 - `context.execAdapter()`
 
 Parser caching should exist early. Re-parsing every TypeScript file for every
-rule is acceptable for a local script and wasteful for a real tool.
+rule is acceptable for a local script and wasteful for a real tool. The current
+runner caches `context.parseTypescript(file)` per file.
+
+## Useful Helpers
+
+Import helpers from `pokayoke` when local rules need common source plumbing:
+
+```ts
+import {
+  checkGeneratedText,
+  lineAt,
+  locate,
+  previousLine,
+  syncGeneratedText,
+} from "pokayoke";
+```
+
+- `context.parseTypescript(file)`: cached TypeScript `SourceFile` parsing.
+- `locate(source, index)`: one-indexed line and column.
+- `lineAt(source, index)`: full source line for an offset.
+- `previousLine(source, index)`: previous source line for suppression-style checks.
+- `checkGeneratedText(...)`: report generated artifact drift.
+- `syncGeneratedText(...)`: write a generated file when `context.fix` is true.
 
 ## Findings
 
@@ -79,3 +101,43 @@ type Finding = {
 
 Good findings explain the convention. They do not merely point at a line and
 say it is wrong.
+
+## Generated Drift
+
+Generated files should have one source of truth. A rule can support both check
+and fix mode:
+
+```ts
+if (context.fix) {
+  await syncGeneratedText(context.root, "docs/catalogue.md", expected);
+  return { findings: [] };
+}
+
+return {
+  findings: checkGeneratedText({
+    actual,
+    expected,
+    file: "docs/catalogue.md",
+    ruleId: "agents/catalogue-in-sync",
+    syncCommand: "pokayoke check --fix",
+  }),
+};
+```
+
+## Tests
+
+Use `bun:test` for direct rule tests. Use `pokayoke/fixture-testing` when a rule
+is clearer as good and bad files:
+
+```ts
+import { testRuleFixtures } from "pokayoke/fixture-testing";
+
+import { noForbiddenCommand } from "./no-forbidden-command";
+
+testRuleFixtures({
+  rule: noForbiddenCommand,
+  root: import.meta.dir,
+  good: `${import.meta.dir}/fixtures/good`,
+  bad: `${import.meta.dir}/fixtures/bad`,
+});
+```

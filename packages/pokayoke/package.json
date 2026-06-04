@@ -1,13 +1,48 @@
 {
   "name": "pokayoke",
   "version": "0.0.1",
+  "description": "repo-policy tooling for convention checks that humans and agents can both run",
   "license": "MIT",
   "type": "module",
+  "types": "src/index.ts",
   "module": "src/index.ts",
   "bin": {
     "pokayoke": "src/cli.ts"
   },
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  },
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./fixture-testing": {
+      "types": "./src/fixture-testing.ts",
+      "import": "./src/fixture-testing.ts",
+      "default": "./src/fixture-testing.ts"
+    }
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "README.md"
+  ],
+  "keywords": [
+    "agents",
+    "bun",
+    "conventions",
+    "lint",
+    "policy",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rorz/pokayoke.git",
+    "directory": "packages/pokayoke"
   }
 }

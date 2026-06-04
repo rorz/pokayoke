@@ -3,10 +3,7 @@
   "entry": [
     ".pokayoke/config.ts",
     "packages/pokayoke/src/cli.ts",
-    "packages/pokayoke/src/index.ts",
-    "packages/package-policy/src/index.ts",
-    "packages/patterns/src/index.ts",
-    "packages/typescript/src/index.ts"
+    "packages/pokayoke/src/index.ts"
   ],
   "project": [".pokayoke/**/*.ts", "packages/**/*.ts"],
   "ignoreFiles": ["packages/**/*.test.ts"],

@@ -28,10 +28,8 @@ project-wide policy model.
 
 ```txt
 packages/
-  pokayoke/        # CLI, engine types, core presets
-  typescript/      # generic TypeScript rules
-  package-policy/  # workspace and package.json rules
-  patterns/        # regex and file-pattern rules
+  pokayoke/        # CLI, engine types, bundled rules, core presets
+SKILL.md           # agent-facing setup and rule-authoring instructions
 docs/
   why-pokayoke.md
   configuration.md
@@ -40,6 +38,7 @@ docs/
   agent-setup.md
   agent-rules.md
   adapters.md
+  publishing.md
 examples/
   basic/
     .pokayoke/
@@ -49,9 +48,12 @@ examples/
 Current packages:
 
 - `pokayoke`
-- `@pokayoke/typescript`
-- `@pokayoke/package-policy`
-- `@pokayoke/patterns`
+
+Bundled rule families:
+
+- `pokayoke/typescript/recommended`
+- `pokayoke/package-policy/bun-workspaces`
+- `pokayoke/patterns/recommended`
 
 ## Rule Model
 
@@ -89,6 +91,9 @@ Agent-facing instructions are repo contracts too. pokayoke should help keep
 agent docs, examples, generated catalogues, and mirrored instruction files in
 sync with the live code and CLI surface.
 
+Start with [SKILL.md](SKILL.md) when an agent needs to install pokayoke, create
+rules, test rules, or keep agent-facing docs current.
+
 See [docs/agent-setup.md](docs/agent-setup.md) for the setup checklist.
 See [docs/agent-rules.md](docs/agent-rules.md).
 
@@ -110,7 +115,7 @@ See [docs/suppressions.md](docs/suppressions.md).
 4. Suppression parser with required reasons and unused-suppression reporting.
 5. Generic TypeScript, package policy, and pattern rules.
 6. Adapter rules for existing tools.
-7. `--fix` support after the reporting model is stable.
+7. Fix-capable generated artifact helpers.
 
 ## Commands
 
@@ -120,7 +125,7 @@ Install dependencies:
 bun install
 ```
 
-Run the placeholder CLI:
+Run the CLI:
 
 ```sh
 bun run start
@@ -158,8 +163,22 @@ Run tests:
 bun test
 ```
 
+Inspect npm package contents:
+
+```sh
+bun run publish:check
+```
+
+Publish through the GitHub Actions trusted publishing workflow. First configure
+the trusted publisher on npmjs.com, then publish a GitHub release. See
+[docs/publishing.md](docs/publishing.md).
+
 ## Development Notes
 
 Use Bun for package management, scripts, tests, and runtime work. Avoid adding
 Node-specific runtime dependencies unless there is a strong reason and the
 tradeoff is explicit.
+
+Packages intentionally publish TypeScript source for Bun rather than bundled
+JavaScript. Keep `exports`, `bin`, `files`, and peer dependency ranges valid for
+npm before publishing.

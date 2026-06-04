@@ -1,3 +1,5 @@
+import type ts from "typescript";
+
 export type RuleKind = "file" | "project" | "adapter";
 
 export type RuleSeverity = "off" | "warn" | "error";
@@ -39,10 +41,11 @@ export type Workspace = {
 
 export type RuleContext<TOptions = unknown> = {
   root: string;
+  fix: boolean;
   options: TOptions;
   files: () => Promise<string[]>;
   readFile: (file: string) => Promise<string>;
-  parseTypescript: (file: string) => Promise<unknown>;
+  parseTypescript: (file: string) => Promise<ts.SourceFile>;
   packageJson: (workspace?: string) => Promise<unknown>;
   workspaces: () => Promise<Workspace[]>;
   report: (finding: Finding) => void;

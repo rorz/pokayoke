@@ -4,7 +4,11 @@ import { agentInstructionsInSync } from "./rules/agent-instructions-in-sync";
 import { noRootSourceFiles } from "./rules/no-root-source-files";
 
 export default defineConfig({
-  extends: ["pokayoke/recommended", "@pokayoke/package-policy/bun-workspaces"],
+  extends: [
+    "pokayoke/recommended",
+    "pokayoke/typescript/recommended",
+    "pokayoke/package-policy/bun-workspaces",
+  ],
   plugins: [
     definePlugin({
       name: "local",
@@ -16,9 +20,11 @@ export default defineConfig({
   ],
   files: [
     ".pokayoke/**/*.ts",
+    ".github/**/*.yml",
     "AGENTS.md",
     "CLAUDE.md",
     "README.md",
+    "SKILL.md",
     "docs/**/*.md",
     "examples/**/*.jsonc",
     "examples/**/*.ts",

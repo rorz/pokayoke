@@ -28,6 +28,7 @@ The init command creates:
   config.ts
   rules/
     no-root-source-files.ts
+    no-root-source-files.test.ts
 ```
 
 Existing files are skipped. Use `pokayoke init --force` only when the user asks
@@ -87,11 +88,14 @@ export default defineConfig({
 ```
 
 Write local rules in `.pokayoke/rules`. Keep them small and explicit.
+Add or keep a nearby test for every rule.
 
 ## Agent Instruction Rails
 
 Agent-facing files drift easily. Good pokayoke rules for agents usually check:
 
+- Root `SKILL.md` instructions stay current with the actual pokayoke CLI and
+  rule API.
 - Mirrored instruction files stay synchronized.
 - Generated catalogues match the live command or API contract.
 - Command examples in prose resolve to real commands.
@@ -106,9 +110,11 @@ unless the user specifies a different source.
 Before finishing setup:
 
 - Run `pokayoke check`.
+- Run the local rule tests.
 - Run the repo's normal `check` script.
 - Confirm `.pokayoke/config.ts` loads successfully.
 - Confirm local rules live under `.pokayoke/rules`.
+- Confirm `SKILL.md` tells agents how to configure pokayoke and author rules.
 - Confirm generated or mirrored agent docs have a clear source of truth.
 - Mention any rules that are placeholders rather than implemented checks.
 

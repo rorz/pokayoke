@@ -16,7 +16,7 @@ The required pieces are:
 
 ## Scope
 
-pokayoke should support these forms:
+pokayoke supports these forms:
 
 ```ts
 // Same-line suppression.
@@ -36,12 +36,14 @@ const fixture = "deprecated command";
 
 ## Unused Suppressions
 
-Unused suppressions should report by default. A stale suppression is evidence
-that the code changed and the exception may no longer be needed.
+Unused suppressions report according to `suppressions.reportUnused`. A stale
+suppression is evidence that the code changed and the exception may no longer be
+needed.
 
 ```jsonc
 {
   "suppressions": {
+    "fileLineLimit": 10,
     "reportUnused": "warn"
   }
 }

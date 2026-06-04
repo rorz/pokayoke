@@ -1,4 +1,11 @@
 export {
+  forEachTypescriptNode,
+  parseTypescriptSource,
+  type TypeScriptSourceFile,
+  typescriptLocation,
+} from "./ast";
+export { type Baseline, findingKey, isBaselined } from "./baseline";
+export {
   masthead,
   renderMasthead,
 } from "./brand";
@@ -21,9 +28,45 @@ export {
 } from "./config";
 export { defineConfig, definePlugin, definePreset, defineRule } from "./define";
 export { type CheckOptions, type CheckResult, runCheck } from "./engine";
+export {
+  checkGeneratedText,
+  type GeneratedTextOptions,
+  type GeneratedTextSyncResult,
+  syncGeneratedText,
+} from "./generated";
 export { type InitFileResult, type InitOptions, type InitResult, initProject } from "./init";
 export { formatStylish } from "./reporter";
+export {
+  bundledPlugins,
+  catalog,
+  enforceArrowFunction,
+  fileMustMatch,
+  noBannedText,
+  noForwardReference,
+  noNpxInScripts,
+  noSwallowedErrors,
+  requiredText,
+  workspaceProtocol,
+} from "./rules";
+export {
+  countLines,
+  escapeRegExp,
+  lineAt,
+  locate,
+  previousLine,
+  type SourceLocation,
+} from "./source";
 export { mvpOrder, projectPositioning, renderProjectSummary, ruleKinds } from "./summary";
+export {
+  applySuppressions,
+  findSuppressions,
+  type NormalizedSuppressionConfig,
+  normalizeSuppressionConfig,
+  type Suppression,
+  type SuppressionScope,
+  unusedSuppressionFindings,
+  validateSuppressions,
+} from "./suppressions";
 export type {
   AdapterResult,
   EnabledSeverity,

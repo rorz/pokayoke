@@ -1,4 +1,41 @@
+#!/usr/bin/env bun
+
 import { formatStylish, initProject, renderProjectSummary, runCheck } from "./index";
+
+function readOption(args: string[], name: string): string | undefined {
+  const index = args.indexOf(name);
+
+  if (index === -1) {
+    return undefined;
+  }
+
+  return args[index + 1];
+}
+
+function readRuleId(args: string[]): string | undefined {
+  for (let index = 1; index < args.length; index += 1) {
+    const arg = args[index];
+
+    if (!arg) {
+      continue;
+    }
+
+    if (arg === "--format") {
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--fix") {
+      continue;
+    }
+
+    if (!arg.startsWith("--")) {
+      return arg;
+    }
+  }
+
+  return undefined;
+}
 
 const args = Bun.argv.slice(2);
 const command = args[0];
@@ -8,7 +45,8 @@ if (!command) {
 } else if (command === "check") {
   const format = readOption(args, "--format") ?? "stylish";
   const ruleId = readRuleId(args);
-  const result = await runCheck(ruleId ? { ruleId } : {});
+  const fix = args.includes("--fix");
+  const result = await runCheck({ ...(ruleId ? { ruleId } : {}), fix });
 
   if (format === "json") {
     await Bun.write(Bun.stdout, `${JSON.stringify(result, null, 2)}\n`);
@@ -35,35 +73,4 @@ if (!command) {
 } else {
   await Bun.write(Bun.stderr, `Unknown command: ${command}\n`);
   process.exitCode = 1;
-}
-
-function readOption(args: string[], name: string): string | undefined {
-  const index = args.indexOf(name);
-
-  if (index === -1) {
-    return undefined;
-  }
-
-  return args[index + 1];
-}
-
-function readRuleId(args: string[]): string | undefined {
-  for (let index = 1; index < args.length; index += 1) {
-    const arg = args[index];
-
-    if (!arg) {
-      continue;
-    }
-
-    if (arg === "--format") {
-      index += 1;
-      continue;
-    }
-
-    if (!arg.startsWith("--")) {
-      return arg;
-    }
-  }
-
-  return undefined;
 }

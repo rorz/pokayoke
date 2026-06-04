@@ -14,14 +14,14 @@
     "biome": "biome ci .",
     "biome:fix": "biome check --write .",
     "knip": "knip --strict --no-progress --treat-config-hints-as-errors --treat-tag-hints-as-errors",
+    "pack:dry-run": "bun run check && NPM_CONFIG_CACHE=/private/tmp/pokayoke-npm-cache npm pack --dry-run --workspace pokayoke",
+    "publish:setup": "npm exec --package=npm@latest -- npm trust github pokayoke --repo rorz/pokayoke --file publish.yml --env npm --allow-publish --yes",
+    "publish:check": "bun run pack:dry-run",
     "check": "bun run typecheck && bun run biome && bun run knip && bun test && bun run dogfood",
     "test": "bun test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
-    "@pokayoke/package-policy": "workspace:*",
-    "@pokayoke/patterns": "workspace:*",
-    "@pokayoke/typescript": "workspace:*",
     "@types/bun": "latest",
     "knip": "^6.15.0",
     "pokayoke": "workspace:*",

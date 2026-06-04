@@ -20,7 +20,7 @@ const files = {
 import { noRootSourceFiles } from "./rules/no-root-source-files";
 
 export default defineConfig({
-  extends: ["pokayoke/recommended", "@pokayoke/package-policy/bun-workspaces"],
+  extends: ["pokayoke/recommended"],
   plugins: [
     definePlugin({
       name: "local",
@@ -29,7 +29,7 @@ export default defineConfig({
       },
     }),
   ],
-  files: ["README.md", "docs/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
+  files: ["AGENTS.md", "SKILL.md", "README.md", "docs/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
   ignores: ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
   suppressions: {
     directive: "pokayoke-ignore",
@@ -40,8 +40,6 @@ export default defineConfig({
   rules: {
     "repo/no-root-source-files": "error",
     "structure/max-file-lines": ["error", { max: 350 }],
-    "package/no-npx-in-scripts": "error",
-    "package/workspace-protocol": ["error", { protocol: "workspace:*" }],
   },
 });
 `,
@@ -73,6 +71,39 @@ export const noRootSourceFiles = defineRule({
 
     return { findings };
   },
+});
+`,
+  ".pokayoke/rules/no-root-source-files.test.ts": `import { describe, expect, test } from "bun:test";
+import { mkdir, mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+
+import { noRootSourceFiles } from "./no-root-source-files";
+
+describe("repo/no-root-source-files", () => {
+  test("reports source files at the repository root", async () => {
+    const root = await mkdtemp(\`\${tmpdir()}/pokayoke-local-rule-\`);
+
+    await mkdir(\`\${root}/src\`, { recursive: true });
+    await Bun.write(\`\${root}/src/index.ts\`, "export const value = 1;\\n");
+
+    const result = await noRootSourceFiles.run({
+      execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
+      files: async () => [],
+      fix: false,
+      options: undefined,
+      packageJson: async () => ({}),
+      parseTypescript: async () => {
+        throw new Error("parseTypescript is not used by this rule.");
+      },
+      readFile: async () => "",
+      report: () => {},
+      root,
+      workspaces: async () => [],
+    });
+
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.file).toBe("src/index.ts");
+  });
 });
 `,
 };

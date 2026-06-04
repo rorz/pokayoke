@@ -13,6 +13,7 @@ For step-by-step repo setup, see [agent-setup.md](agent-setup.md).
 Useful agent rules usually compare one source of truth with one or more prose
 surfaces:
 
+- `SKILL.md` setup and rule-authoring instructions to the current CLI and API.
 - CLI contract to agent skill examples.
 - API contract to documentation tables.
 - Generated operation catalogue to the live operation registry.

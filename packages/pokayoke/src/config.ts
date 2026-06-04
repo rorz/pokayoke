@@ -15,6 +15,7 @@ export type ConfigLookupTarget = (typeof configLookupOrder)[number];
 
 export type SuppressionConfig = {
   directive?: string;
+  fileLineLimit?: number;
   legacyDirectives?: string[];
   requireReason?: boolean;
   reportUnused?: RuleSeverity;

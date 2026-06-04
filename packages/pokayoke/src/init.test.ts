@@ -12,10 +12,14 @@ describe("initProject", () => {
     expect(result.files).toEqual([
       { path: ".pokayoke/config.ts", status: "created" },
       { path: ".pokayoke/rules/no-root-source-files.ts", status: "created" },
+      { path: ".pokayoke/rules/no-root-source-files.test.ts", status: "created" },
     ]);
     expect(await Bun.file(`${root}/.pokayoke/config.ts`).text()).toContain("defineConfig");
     expect(await Bun.file(`${root}/.pokayoke/rules/no-root-source-files.ts`).text()).toContain(
       "repo/no-root-source-files",
+    );
+    expect(await Bun.file(`${root}/.pokayoke/rules/no-root-source-files.test.ts`).text()).toContain(
+      "reports source files",
     );
   });
 
@@ -28,6 +32,7 @@ describe("initProject", () => {
       files: [
         { path: ".pokayoke/config.ts", status: "skipped" },
         { path: ".pokayoke/rules/no-root-source-files.ts", status: "skipped" },
+        { path: ".pokayoke/rules/no-root-source-files.test.ts", status: "skipped" },
       ],
     });
     expect(await Bun.file(`${root}/.pokayoke/config.ts`).text()).toBe("custom");

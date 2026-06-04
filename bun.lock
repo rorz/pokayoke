@@ -6,27 +6,10 @@
       "name": "pokayoke",
       "devDependencies": {
         "@biomejs/biome": "^2.4.16",
-        "@pokayoke/package-policy": "workspace:*",
-        "@pokayoke/patterns": "workspace:*",
-        "@pokayoke/typescript": "workspace:*",
         "@types/bun": "latest",
         "knip": "^6.15.0",
         "pokayoke": "workspace:*",
         "typescript": "^5.9.3",
-      },
-    },
-    "packages/package-policy": {
-      "name": "@pokayoke/package-policy",
-      "version": "0.0.1",
-      "peerDependencies": {
-        "pokayoke": "workspace:*",
-      },
-    },
-    "packages/patterns": {
-      "name": "@pokayoke/patterns",
-      "version": "0.0.1",
-      "peerDependencies": {
-        "pokayoke": "workspace:*",
       },
     },
     "packages/pokayoke": {
@@ -35,12 +18,8 @@
       "bin": {
         "pokayoke": "src/cli.ts",
       },
-    },
-    "packages/typescript": {
-      "name": "@pokayoke/typescript",
-      "version": "0.0.1",
-      "peerDependencies": {
-        "pokayoke": "workspace:*",
+      "dependencies": {
+        "typescript": "^5.9.3",
       },
     },
   },
@@ -150,12 +129,6 @@
     "@oxc-resolver/binding-win32-arm64-msvc": ["@oxc-resolver/binding-win32-arm64-msvc@11.20.0", "", { "os": "win32", "cpu": "arm64" }, "sha512-qPi25YNPe4YenS8MgsQU2+bIFHxxpLx1LVna2444cEHqNPhNjvWf9zqj4aWE43H9LpAsTmkkAlA3eL5ElBU3mA=="],
 
     "@oxc-resolver/binding-win32-x64-msvc": ["@oxc-resolver/binding-win32-x64-msvc@11.20.0", "", { "os": "win32", "cpu": "x64" }, "sha512-Wb14jWEW8huH6It9F6sXd9vrYmIS7pMrgkU6sxpLxkP+9z+wRgs71hUEhRpcn8FOXAFa27FVWfY2tRpbfTzfLw=="],
-
-    "@pokayoke/package-policy": ["@pokayoke/package-policy@workspace:packages/package-policy"],
-
-    "@pokayoke/patterns": ["@pokayoke/patterns@workspace:packages/patterns"],
-
-    "@pokayoke/typescript": ["@pokayoke/typescript@workspace:packages/typescript"],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.2", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg=="],
 
