@@ -1,16 +1,30 @@
 {
-  "name": "pokayoke",
-  "version": "0.0.0",
+  "name": "pokayoke-workspace",
+  "version": "0.0.1",
   "private": true,
-  "module": "src/index.ts",
+  "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "bun run src/index.ts",
-    "check": "tsc --noEmit",
+    "start": "bun run packages/pokayoke/src/cli.ts",
+    "dogfood": "bun run packages/pokayoke/src/cli.ts check",
+    "typecheck": "tsc --noEmit",
+    "biome": "biome ci .",
+    "biome:fix": "biome check --write .",
+    "knip": "knip --strict --no-progress --treat-config-hints-as-errors --treat-tag-hints-as-errors",
+    "check": "bun run typecheck && bun run biome && bun run knip && bun test && bun run dogfood",
     "test": "bun test"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@pokayoke/package-policy": "workspace:*",
+    "@pokayoke/patterns": "workspace:*",
+    "@pokayoke/typescript": "workspace:*",
     "@types/bun": "latest",
+    "knip": "^6.15.0",
+    "pokayoke": "workspace:*",
     "typescript": "^5.9.3"
   }
 }

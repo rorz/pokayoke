@@ -1,0 +1,13 @@
+{
+  "name": "pokayoke",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "module": "src/index.ts",
+  "bin": {
+    "pokayoke": "src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
