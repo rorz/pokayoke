@@ -38,11 +38,6 @@ import {
   normalizeTrailingSlash,
 } from "vinext/server/request-pipeline";
 import { mergeRewriteQuery } from "vinext/utils/query";
-import { notFoundStaticAssetResponse } from "../node_modules/vinext/dist/server/http-error-responses.js";
-import {
-  assetPrefixPathname,
-  isNextStaticPath,
-} from "../node_modules/vinext/dist/utils/asset-prefix.js";
 
 interface Env {
   ASSETS: {
@@ -60,6 +55,43 @@ interface Env {
 interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
   passThroughOnException(): void;
+}
+
+const ASSET_PREFIX_URL_DIR = "_next/static";
+
+function notFoundStaticAssetResponse(): Response {
+  return new Response("Not Found", {
+    status: 404,
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });
+}
+
+function isAbsoluteAssetPrefix(assetPrefix: string): boolean {
+  return /^https?:\/\//i.test(assetPrefix);
+}
+
+function assetPrefixPathname(assetPrefix: string): string {
+  if (!assetPrefix) return "";
+  if (!isAbsoluteAssetPrefix(assetPrefix)) return assetPrefix;
+  try {
+    let pathname = new URL(assetPrefix).pathname;
+    while (pathname.endsWith("/")) pathname = pathname.slice(0, -1);
+    return pathname === "" ? "" : pathname;
+  } catch (error) {
+    void error;
+    return "";
+  }
+}
+
+function isNextStaticPath(pathname: string, basePath: string, assetPathPrefix: string): boolean {
+  let p = pathname;
+  if (basePath && (p === basePath || p.startsWith(`${basePath}/`))) {
+    p = p.slice(basePath.length) || "/";
+  }
+  if (assetPathPrefix && (p === assetPathPrefix || p.startsWith(`${assetPathPrefix}/`))) {
+    p = p.slice(assetPathPrefix.length) || "/";
+  }
+  return p.startsWith(`/${ASSET_PREFIX_URL_DIR}/`);
 }
 
 // Extract config values (embedded at build time in the server entry)
