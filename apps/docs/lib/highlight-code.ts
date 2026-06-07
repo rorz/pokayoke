@@ -7,6 +7,7 @@ import type { BundledTheme } from "shiki/themes";
 import { bundledThemes } from "shiki/themes";
 import type { HighlightedCodeBlocks } from "./code-blocks";
 import { codeBlockKey, normalizeFenceLanguage } from "./code-blocks";
+import { normalizeGithubCallouts } from "./github-callouts";
 
 type FencedCodeBlock = {
   code: string;
@@ -40,7 +41,7 @@ const createHighlighter = createBundledHighlighter({
 let highlighterPromise: ReturnType<typeof createHighlighter> | undefined;
 
 export async function highlightCodeBlocks(content: string): Promise<HighlightedCodeBlocks> {
-  const blocks = collectFencedCodeBlocks(content);
+  const blocks = collectFencedCodeBlocks(normalizeGithubCallouts(content));
   const highlightedBlocks: HighlightedCodeBlocks = {};
 
   if (blocks.length === 0) {

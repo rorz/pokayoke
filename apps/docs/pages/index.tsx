@@ -65,7 +65,7 @@ export default function HomePage() {
                 </h1>
                 <p className="mt-6 max-w-[640px] text-[18px] text-neutral-600 leading-8 sm:text-[20px]">
                   Turn your repo conventions into checks that humans and
-                  agents can run, understand, and repair.
+                  agents can run, understand, and repair. Designed to work harmoniously alongside your existing code analysis, linting, and formatting toolchains.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-2" aria-label="Project status">

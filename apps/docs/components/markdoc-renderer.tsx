@@ -4,16 +4,12 @@ import React, { useMemo, useState } from "react";
 
 import { codeBlockKey, type HighlightedCodeBlocks } from "../lib/code-blocks";
 import { slugify } from "../lib/docs";
+import { normalizeGithubCallouts } from "../lib/github-callouts";
+import { Callout } from "./callout";
 
 type MarkdocRendererProps = {
   content: string;
   highlightedCodeBlocks?: HighlightedCodeBlocks;
-};
-
-type CalloutProps = {
-  title?: string;
-  tone?: "note" | "success" | "warning";
-  children: React.ReactNode;
 };
 
 type FenceProps = {
@@ -61,7 +57,7 @@ const markdocConfig = {
         tone: {
           type: String,
           default: "note",
-          matches: ["note", "success", "warning"],
+          matches: ["note", "tip", "success", "important", "warning", "caution"],
         },
       },
     },
@@ -91,7 +87,7 @@ const markdocConfig = {
 
 export function MarkdocRenderer({ content, highlightedCodeBlocks }: MarkdocRendererProps) {
   const rendered = useMemo(() => {
-    const ast = Markdoc.parse(content);
+    const ast = Markdoc.parse(normalizeGithubCallouts(content));
     const tree = Markdoc.transform(ast, markdocConfig);
     const FenceWithHighlights = (props: FenceProps) => (
       <Fence {...props} highlightedCodeBlocks={highlightedCodeBlocks} />
@@ -108,15 +104,6 @@ export function MarkdocRenderer({ content, highlightedCodeBlocks }: MarkdocRende
   }, [content, highlightedCodeBlocks]);
 
   return <div className={proseClassName}>{rendered}</div>;
-}
-
-function Callout({ title, children }: CalloutProps) {
-  return (
-    <aside className="my-5 border-neutral-300 border-l-2 pl-4 text-[14px] text-neutral-700">
-      {title ? <p className="my-0 font-medium text-neutral-950">{title}</p> : null}
-      <div className="[&>*:first-child]:mt-1 [&>*:last-child]:mb-0">{children}</div>
-    </aside>
-  );
 }
 
 function Fence({ content, language, highlightedCodeBlocks, children }: FenceProps) {
