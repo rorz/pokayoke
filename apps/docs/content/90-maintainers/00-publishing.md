@@ -1,3 +1,8 @@
+---
+title: Publishing
+description: Trusted publishing and package release flow.
+---
+
 # Publishing
 
 pokayoke publishes as one npm package: `pokayoke`.

@@ -1,3 +1,8 @@
+---
+title: Why pokayoke
+description: The policy layer pokayoke is meant to own.
+---
+
 # Why pokayoke
 
 Teams already have good tools for many code quality problems.

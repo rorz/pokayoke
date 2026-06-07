@@ -1,6 +1,10 @@
 import Markdoc from "@markdoc/markdoc";
-import type { BundledLanguage, BundledTheme } from "shiki";
-import { createHighlighter } from "shiki";
+import { createBundledHighlighter } from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import type { BundledLanguage } from "shiki/langs";
+import { bundledLanguages } from "shiki/langs";
+import type { BundledTheme } from "shiki/themes";
+import { bundledThemes } from "shiki/themes";
 import type { HighlightedCodeBlocks } from "./code-blocks";
 import { codeBlockKey, normalizeFenceLanguage } from "./code-blocks";
 
@@ -26,6 +30,12 @@ const loadedLanguages = [
 type LoadedLanguage = (typeof loadedLanguages)[number];
 
 const loadedLanguageSet = new Set<string>(loadedLanguages);
+
+const createHighlighter = createBundledHighlighter({
+  engine: createJavaScriptRegexEngine,
+  langs: bundledLanguages,
+  themes: bundledThemes,
+});
 
 let highlighterPromise: ReturnType<typeof createHighlighter> | undefined;
 

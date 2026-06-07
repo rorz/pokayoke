@@ -1,3 +1,8 @@
+---
+title: Configuration
+description: Config lookup, local rules, ignores, suppressions, and presets.
+---
+
 # Configuration
 
 pokayoke uses one root config file: `pokayoke.jsonc`.

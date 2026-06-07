@@ -17,7 +17,7 @@ The docs site is the canonical source of truth for this project.
 
 - Production docs: [pokayoke.codes](https://pokayoke.codes)
 - Local docs: run `bun run docs:dev`, then open `http://localhost:7870`
-- Canonical source files: `apps/docs/content/*.md`
+- Canonical source files: `apps/docs/content/**/*.md`
 
 Keep this README short. Architecture, tooling, rule authoring, agent setup,
 suppressions, adapters, and policy details belong in the docs app. When the

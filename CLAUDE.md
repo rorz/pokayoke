@@ -114,7 +114,7 @@ For more information, read the Bun API docs in `node_modules/bun-types/docs/**.m
 
 The docs site is the canonical source of truth for this project. Long-form
 architecture, tooling, publishing, policy, rule-authoring, adapter, and agent
-workflow documentation lives in `apps/docs/content/*.md` and is exposed through
+workflow documentation lives in `apps/docs/content/**/*.md` and is exposed through
 root-level docs routes such as `/configuration` and `/rule-authoring`.
 
 Keep `README.md` short as a doorway into the project. Do not add project

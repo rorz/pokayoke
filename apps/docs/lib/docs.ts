@@ -1,15 +1,7 @@
-import adaptersContent from "../content/adapters.md?raw";
-import agentRulesContent from "../content/agent-rules.md?raw";
-import agentSetupContent from "../content/agent-setup.md?raw";
-import configurationContent from "../content/configuration.md?raw";
-import homeContent from "../content/home.md?raw";
-import publishingContent from "../content/publishing.md?raw";
-import ruleAuthoringContent from "../content/rule-authoring.md?raw";
-import suppressionsContent from "../content/suppressions.md?raw";
-import whyPokayokeContent from "../content/why-pokayoke.md?raw";
+import { loadDocs } from "./docs-content";
 
-type DocSection = "Start" | "Concepts" | "Reference" | "Maintainers";
-type DocAudience = "docs" | "maintenance";
+type DocSection = string;
+export type DocAudience = "docs" | "maintenance";
 
 export type Doc = {
   slug: string;
@@ -17,6 +9,7 @@ export type Doc = {
   description: string;
   section: DocSection;
   content: string;
+  audience: DocAudience;
 };
 
 export type NavSection = {
@@ -35,91 +28,38 @@ export type AdjacentDocs = {
   next: Doc | undefined;
 };
 
-const docsSource: Doc[] = [
-  {
-    slug: "overview",
-    title: "Overview",
-    description: "The short version of what pokayoke is for and how to start.",
-    section: "Start",
-    content: homeContent,
-  },
-  {
-    slug: "why-pokayoke",
-    title: "Why pokayoke",
-    description: "The policy layer pokayoke is meant to own.",
-    section: "Concepts",
-    content: whyPokayokeContent,
-  },
-  {
-    slug: "agent-setup",
-    title: "Agent setup",
-    description: "A setup checklist for adding pokayoke to repositories.",
-    section: "Concepts",
-    content: agentSetupContent,
-  },
-  {
-    slug: "configuration",
-    title: "Configuration",
-    description: "Config lookup, local rules, ignores, suppressions, and presets.",
-    section: "Reference",
-    content: configurationContent,
-  },
-  {
-    slug: "suppressions",
-    title: "Suppressions",
-    description: "Local, justified suppression directives and unused suppression reporting.",
-    section: "Reference",
-    content: suppressionsContent,
-  },
-  {
-    slug: "rule-authoring",
-    title: "Rule authoring",
-    description: "Rule kinds, context helpers, and implementation shape.",
-    section: "Reference",
-    content: ruleAuthoringContent,
-  },
-  {
-    slug: "agent-rules",
-    title: "Agent rules",
-    description: "Checks for stale or drifted agent-facing instructions.",
-    section: "Reference",
-    content: agentRulesContent,
-  },
-  {
-    slug: "adapters",
-    title: "Adapters",
-    description: "How existing tools can report through pokayoke.",
-    section: "Reference",
-    content: adaptersContent,
-  },
-  {
-    slug: "maintenance/publishing",
-    title: "Publishing",
-    description: "Trusted publishing and package release flow.",
-    section: "Maintainers",
-    content: publishingContent,
-  },
-];
+const docsSource = loadDocs();
 
-const docsSectionOrder: DocSection[] = ["Start", "Concepts", "Reference"];
-const maintenanceSectionOrder: DocSection[] = ["Maintainers"];
+export const docs: Doc[] = docsSource;
 
-export const docs = docsSource;
+function navSectionsForAudience(audience: DocAudience): NavSection[] {
+  const sections = new Map<DocSection, Doc[]>();
 
-function navSectionsFor(sectionOrder: DocSection[]): NavSection[] {
-  return sectionOrder
-    .map((section) => ({
-      section,
-      docs: docs.filter((doc) => doc.section === section),
-    }))
-    .filter((section) => section.docs.length > 0);
+  for (const doc of docs.filter((doc) => doc.audience === audience)) {
+    const sectionDocs = sections.get(doc.section);
+
+    if (sectionDocs) {
+      sectionDocs.push(doc);
+    } else {
+      sections.set(doc.section, [doc]);
+    }
+  }
+
+  return [...sections.entries()].map(([section, docs]) => ({
+    docs,
+    section,
+  }));
 }
 
-export const docsNavSections = navSectionsFor(docsSectionOrder);
-export const maintenanceNavSections = navSectionsFor(maintenanceSectionOrder);
+export const docsNavSections = navSectionsForAudience("docs");
+export const maintenanceNavSections = navSectionsForAudience("maintenance");
 
 export function getDoc(slug: string): Doc | undefined {
   return docs.find((doc) => doc.slug === slug);
+}
+
+export function audienceForDoc(doc: Doc): DocAudience {
+  return doc.audience;
 }
 
 export function getAdjacentDocs(slug: string): AdjacentDocs {
@@ -149,10 +89,6 @@ export function getAdjacentDocs(slug: string): AdjacentDocs {
   };
 }
 
-export function audienceForDoc(doc: Doc): DocAudience {
-  return doc.slug.startsWith("maintenance/") ? "maintenance" : "docs";
-}
-
 export function firstDocForAudience(audience: DocAudience): Doc | undefined {
   return docs.find((doc) => audienceForDoc(doc) === audience);
 }
@@ -171,6 +107,22 @@ export function slugFromRouteParam(slug: string[] | string | undefined): string 
   }
 
   return "overview";
+}
+
+export function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/&[a-z0-9#]+;/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function cleanHeading(value: string): string {
+  return value
+    .replace(/\s+\{#[^}]+\}\s*$/, "")
+    .replace(/[`*_~]/g, "")
+    .trim();
 }
 
 export function getHeadings(content: string): DocHeading[] {
@@ -199,20 +151,4 @@ export function getHeadings(content: string): DocHeading[] {
   }
 
   return headings;
-}
-
-export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/&[a-z0-9#]+;/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function cleanHeading(value: string): string {
-  return value
-    .replace(/\s+\{#[^}]+\}\s*$/, "")
-    .replace(/[`*_~]/g, "")
-    .trim();
 }

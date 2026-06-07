@@ -55,11 +55,7 @@ export const canonicalDocsSource: Rule = {
           continue;
         }
 
-        const importedFile = path.posix.normalize(
-          path.posix.join(path.posix.dirname(file), specifier.replace(/\?raw$/, "")),
-        );
-
-        if (!importedFile.startsWith(`${docsContentRoot}/`)) {
+        if (!isCanonicalMarkdownSpecifier(file, specifier)) {
           findings.push({
             ruleId,
             severity: "error",
@@ -70,11 +66,40 @@ export const canonicalDocsSource: Rule = {
           });
         }
       }
+
+      for (const globImport of source.matchAll(
+        /import\.meta\.glob(?:<[^>]+>)?\(\s*["']([^"']+\.md[^"']*)["']/g,
+      )) {
+        const specifier = globImport[1];
+
+        if (!specifier) {
+          continue;
+        }
+
+        if (!isCanonicalMarkdownSpecifier(file, specifier)) {
+          findings.push({
+            ruleId,
+            severity: "error",
+            message: "The docs app globs markdown from outside its canonical content tree.",
+            file,
+            line: lineFor(source, globImport.index ?? 0),
+            advice: `Move the markdown files into ${docsContentRoot}/ and glob them from there.`,
+          });
+        }
+      }
     }
 
     return { findings };
   },
 };
+
+function isCanonicalMarkdownSpecifier(file: string, specifier: string): boolean {
+  const markdownPath = path.posix.normalize(
+    path.posix.join(path.posix.dirname(file), specifier.replace(/\?.*$/, "")),
+  );
+
+  return markdownPath === docsContentRoot || markdownPath.startsWith(`${docsContentRoot}/`);
+}
 
 async function readOptional(
   readFile: (file: string) => Promise<string>,

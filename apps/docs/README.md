@@ -11,7 +11,7 @@ bun run docs:deploy
 ```
 
 The service uses Markdoc, Tailwind CSS, and Phosphor icons. It renders canonical
-project documentation from `apps/docs/content/*.md`.
+project documentation from `apps/docs/content/**/*.md`.
 
 Deployment targets Cloudflare Workers through `vinext deploy`. Set
 `CLOUDFLARE_ACCOUNT_ID` or add an `account_id` to `apps/docs/wrangler.jsonc`

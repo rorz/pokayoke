@@ -1,3 +1,8 @@
+---
+title: Suppressions
+description: Local, justified suppression directives and unused suppression reporting.
+---
+
 # Suppressions
 
 Suppressions are for exceptions, not for making findings disappear in bulk.

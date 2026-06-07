@@ -1,3 +1,8 @@
+---
+title: Overview
+description: The short version of what pokayoke is for and how to start.
+---
+
 # pokayoke
 
 Repo policy tooling for checks that sit between file-local linting and whole

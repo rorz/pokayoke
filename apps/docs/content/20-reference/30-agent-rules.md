@@ -1,3 +1,8 @@
+---
+title: Agent rules
+description: Checks for stale or drifted agent-facing instructions.
+---
+
 # Agent Rules
 
 Agent-facing instructions are part of a repo's executable contract.
@@ -6,7 +11,7 @@ If an agent reads stale commands, stale examples, or a stale generated catalogue
 it can fail confidently. pokayoke should make those surfaces checkable without
 turning the project into an agent framework.
 
-For step-by-step repo setup, see [agent-setup.md](agent-setup.md).
+For step-by-step repo setup, see [Agent setup](/agent-setup).
 
 ## What To Check
 

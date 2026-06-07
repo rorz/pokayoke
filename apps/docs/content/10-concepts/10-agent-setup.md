@@ -1,3 +1,8 @@
+---
+title: Agent setup
+description: A setup checklist for adding pokayoke to repositories.
+---
+
 # Agent Setup
 
 This page is for agents adding pokayoke to a repository.

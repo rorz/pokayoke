@@ -23,7 +23,7 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
         ) : null}
 
         <Link className="inline-flex h-8 items-center" href="/" aria-label="pokayoke docs home">
-          <PokayokeLogo aria-hidden="true" className="h-[20px] w-auto" />
+          <PokayokeLogo aria-hidden="true" className="h-8 w-auto" />
         </Link>
         <nav className="ml-auto flex items-center gap-1 text-xs" aria-label="Project links">
           <a

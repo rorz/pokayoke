@@ -1,3 +1,8 @@
+---
+title: Rule authoring
+description: Rule kinds, context helpers, and implementation shape.
+---
+
 # Rule Authoring
 
 pokayoke rules do not all have the same execution model. The rule kind should
@@ -116,7 +121,7 @@ and fix mode:
 
 ```ts
 if (context.fix) {
-  await syncGeneratedText(context.root, "apps/docs/content/catalogue.md", expected);
+  await syncGeneratedText(context.root, "apps/docs/content/20-reference/catalogue.md", expected);
   return { findings: [] };
 }
 
@@ -124,7 +129,7 @@ return {
   findings: checkGeneratedText({
     actual,
     expected,
-    file: "apps/docs/content/catalogue.md",
+    file: "apps/docs/content/20-reference/catalogue.md",
     ruleId: "agents/catalogue-in-sync",
     syncCommand: "pokayoke check --fix",
   }),

@@ -1,3 +1,8 @@
+---
+title: Adapters
+description: How existing tools can report through pokayoke.
+---
+
 # Adapters
 
 Adapter rules let pokayoke call tools that already own a category of analysis.

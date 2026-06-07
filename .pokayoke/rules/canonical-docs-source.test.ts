@@ -7,7 +7,13 @@ describe("docs/canonical-source", () => {
     const files = new Map([
       ["README.md", "See docs/configuration.md.\n"],
       ["AGENTS.md", "Use apps/docs/content for docs.\n"],
-      ["apps/docs/lib/docs.ts", 'import content from "../../../docs/configuration.md?raw";\n'],
+      [
+        "apps/docs/lib/docs.ts",
+        [
+          'import content from "../../../docs/configuration.md?raw";',
+          'const docs = import.meta.glob<string>("../../../docs/**/*.md", { eager: true });',
+        ].join("\n"),
+      ],
     ]);
 
     const result = await canonicalDocsSource.run({
@@ -42,14 +48,21 @@ describe("docs/canonical-source", () => {
       "Root docs files are not canonical in this repository.",
       "Top-level guidance links to the old root docs directory.",
       "The docs app imports markdown from outside its canonical content tree.",
+      "The docs app globs markdown from outside its canonical content tree.",
     ]);
   });
 
-  test("allows docs app content imports and root route links", async () => {
+  test("allows docs app content imports, globs, and root route links", async () => {
     const files = new Map([
       ["README.md", "Read /configuration for config docs.\n"],
       ["AGENTS.md", "Use apps/docs/content for docs.\n"],
-      ["apps/docs/lib/docs.ts", 'import content from "../content/configuration.md?raw";\n'],
+      [
+        "apps/docs/lib/docs.ts",
+        [
+          'import content from "../content/20-reference/00-configuration.md?raw";',
+          'const docs = import.meta.glob<string>("../content/**/*.md", { eager: true });',
+        ].join("\n"),
+      ],
     ]);
 
     const result = await canonicalDocsSource.run({
