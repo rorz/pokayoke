@@ -125,7 +125,7 @@ export function getAdjacentDocs(slug: string): AdjacentDocs {
 }
 
 export function pathForDoc(doc: Doc): string {
-  return doc.slug === "overview" ? "/" : `/${doc.slug}`;
+  return `/${doc.slug}`;
 }
 
 export function slugFromRouteParam(slug: string[] | string | undefined): string {

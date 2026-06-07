@@ -9,11 +9,9 @@ type DocRouteProps = {
 };
 
 export const getStaticPaths: GetStaticPaths = () => ({
-  paths: docs
-    .filter((doc) => doc.slug !== "overview")
-    .map((doc) => ({
-      params: { slug: doc.slug },
-    })),
+  paths: docs.map((doc) => ({
+    params: { slug: doc.slug },
+  })),
   fallback: false,
 });
 
@@ -21,7 +19,7 @@ export const getStaticProps: GetStaticProps<DocRouteProps> = (context) => {
   const slug = slugFromRouteParam(context.params?.["slug"]);
   const doc = getDoc(slug);
 
-  if (!doc || doc.slug === "overview") {
+  if (!doc) {
     return { notFound: true };
   }
 
