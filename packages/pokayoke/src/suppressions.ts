@@ -20,7 +20,6 @@ export type NormalizedSuppressionConfig = {
   directive: string;
   fileDirective: string;
   fileLineLimit: number;
-  legacyDirectives: string[];
   reportUnused: RuleSeverity;
   requireReason: boolean;
 };
@@ -34,7 +33,6 @@ export function normalizeSuppressionConfig(
     directive,
     fileDirective: `${directive}-file`,
     fileLineLimit: config.fileLineLimit ?? 10,
-    legacyDirectives: config.legacyDirectives ?? [],
     reportUnused: config.reportUnused ?? "warn",
     requireReason: config.requireReason ?? true,
   };
@@ -49,12 +47,7 @@ export function findSuppressions(
     return [];
   }
 
-  const directives = [
-    config.directive,
-    config.fileDirective,
-    ...config.legacyDirectives,
-    ...config.legacyDirectives.map((directive) => `${directive}-file`),
-  ];
+  const directives = [config.directive, config.fileDirective];
   const suppressions: Suppression[] = [];
 
   for (const comment of findDirectiveComments(source, directives)) {

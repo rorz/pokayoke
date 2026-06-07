@@ -1,9 +1,18 @@
 import Head from "next/head";
 import { useMemo, useState } from "react";
 
-import { type Doc, type DocHeading, navSections } from "../lib/docs";
+import {
+  audienceForDoc,
+  type Doc,
+  type DocHeading,
+  firstDocForAudience,
+  docsNavSections,
+  maintenanceNavSections,
+  pathForDoc,
+} from "../lib/docs";
 import { DocsPager } from "./docs-pager";
-import { DocsSidebar } from "./docs-sidebar";
+import { DocsFooter } from "./docs-footer";
+import { type SidebarHandoffLink, DocsSidebar } from "./docs-sidebar";
 import { DocsToc } from "./docs-toc";
 import { DocsTopbar } from "./docs-topbar";
 
@@ -18,15 +27,18 @@ type DocsShellProps = {
 export function DocsShell({ current, headings, previous, next, children }: DocsShellProps) {
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const audience = audienceForDoc(current);
+  const baseSections = audience === "maintenance" ? maintenanceNavSections : docsNavSections;
+  const handoffLink = handoffLinkForAudience(audience);
 
   const filteredSections = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
     if (!normalized) {
-      return navSections;
+      return baseSections;
     }
 
-    return navSections
+    return baseSections
       .map((section) => ({
         section: section.section,
         docs: section.docs.filter((doc) => {
@@ -35,7 +47,7 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
         }),
       }))
       .filter((section) => section.docs.length > 0);
-  }, [query]);
+  }, [baseSections, query]);
 
   return (
     <>
@@ -45,11 +57,12 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="min-h-screen bg-white text-neutral-950">
+      <div className="flex min-h-screen flex-col bg-white font-sans text-neutral-950 antialiased">
         <DocsTopbar onOpenSidebar={() => setSidebarOpen(true)} />
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-4 py-6 sm:px-6 lg:grid-cols-[240px_minmax(0,760px)_200px] lg:gap-10 lg:px-8 lg:py-8">
+        <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-cols-1 px-4 py-6 sm:px-6 lg:grid-cols-[240px_minmax(0,760px)_200px] lg:gap-10 lg:px-8 lg:py-8">
           <DocsSidebar
             current={current}
+            handoffLink={handoffLink}
             onClose={() => setSidebarOpen(false)}
             onQueryChange={setQuery}
             query={query}
@@ -80,7 +93,20 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
 
           <DocsToc headings={headings} />
         </div>
+        <DocsFooter />
       </div>
     </>
   );
+}
+
+function handoffLinkForAudience(audience: ReturnType<typeof audienceForDoc>): SidebarHandoffLink | undefined {
+  if (audience === "docs") {
+    const maintenanceDoc = firstDocForAudience("maintenance");
+    return maintenanceDoc
+      ? { direction: "forward", href: pathForDoc(maintenanceDoc), label: "For maintainers" }
+      : undefined;
+  }
+
+  const docsDoc = firstDocForAudience("docs");
+  return docsDoc ? { direction: "back", href: pathForDoc(docsDoc), label: "Back to docs" } : undefined;
 }

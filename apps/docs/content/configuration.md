@@ -54,7 +54,6 @@ project intentionally wants to regenerate the starter files.
   ],
   "suppressions": {
     "directive": "pokayoke-ignore",
-    "legacyDirectives": [],
     "requireReason": true,
     "reportUnused": "warn"
   },
@@ -137,19 +136,3 @@ That keeps reusable rules clean and makes debt visible to reviewers.
 `pokayoke check --fix` sets `context.fix` for rules. Rules should only write
 when their own repair is deterministic, such as syncing a generated catalogue
 from a live contract.
-
-## npm Distribution
-
-Packages publish TypeScript source for Bun rather than bundled JavaScript. Keep
-package manifests publishable:
-
-- `bin` points at a Bun shebang file.
-- `exports` includes `types` and `import` targets.
-- bundled rule families live inside the `pokayoke` package.
-- workspace development links do not leak into the published package.
-
-Inspect package contents before publishing:
-
-```sh
-bun run pack:dry-run
-```

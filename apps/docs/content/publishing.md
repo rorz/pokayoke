@@ -50,6 +50,22 @@ publish with the `next` dist-tag; normal releases publish with `latest`.
 You can also run the workflow manually from `main`. Use dry run first when you
 want the full CI path without publishing.
 
+## Package Contents
+
+Packages publish TypeScript source for Bun rather than bundled JavaScript. Keep
+package manifests publishable:
+
+- `bin` points at a Bun shebang file.
+- `exports` includes `types` and `import` targets.
+- bundled rule families live inside the `pokayoke` package.
+- workspace development links do not leak into the published package.
+
+Inspect package contents before publishing:
+
+```sh
+bun run publish:check
+```
+
 ## Local Emergency Publish
 
 Trusted publishing should be the normal path. If you need to publish locally:

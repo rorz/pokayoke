@@ -2,10 +2,12 @@ import Markdoc from "@markdoc/markdoc";
 import { Check, Copy } from "@phosphor-icons/react";
 import React, { useMemo, useState } from "react";
 
+import { codeBlockKey, type HighlightedCodeBlocks } from "../lib/code-blocks";
 import { slugify } from "../lib/docs";
 
 type MarkdocRendererProps = {
   content: string;
+  highlightedCodeBlocks?: HighlightedCodeBlocks;
 };
 
 type CalloutProps = {
@@ -17,6 +19,7 @@ type CalloutProps = {
 type FenceProps = {
   content?: string;
   language?: string;
+  highlightedCodeBlocks?: HighlightedCodeBlocks | undefined;
   children?: React.ReactNode;
 };
 
@@ -86,20 +89,23 @@ const markdocConfig = {
   },
 };
 
-export function MarkdocRenderer({ content }: MarkdocRendererProps) {
+export function MarkdocRenderer({ content, highlightedCodeBlocks }: MarkdocRendererProps) {
   const rendered = useMemo(() => {
     const ast = Markdoc.parse(content);
     const tree = Markdoc.transform(ast, markdocConfig);
+    const FenceWithHighlights = (props: FenceProps) => (
+      <Fence {...props} highlightedCodeBlocks={highlightedCodeBlocks} />
+    );
 
     return Markdoc.renderers.react(tree, React, {
       components: {
         Callout,
-        Fence,
+        Fence: FenceWithHighlights,
         Heading,
         InlineCode,
       },
     });
-  }, [content]);
+  }, [content, highlightedCodeBlocks]);
 
   return <div className={proseClassName}>{rendered}</div>;
 }
@@ -113,9 +119,10 @@ function Callout({ title, children }: CalloutProps) {
   );
 }
 
-function Fence({ content, language, children }: FenceProps) {
+function Fence({ content, language, highlightedCodeBlocks, children }: FenceProps) {
   const [copied, setCopied] = useState(false);
   const code = content ?? textFromReact(children);
+  const highlightedCode = highlightedCodeBlocks?.[codeBlockKey(code, language)];
 
   async function copyCode() {
     if (!code || typeof navigator === "undefined" || !navigator.clipboard) {
@@ -128,11 +135,11 @@ function Fence({ content, language, children }: FenceProps) {
   }
 
   return (
-    <figure className="my-5 overflow-hidden border border-neutral-200 bg-neutral-950">
-      <figcaption className="flex h-9 items-center justify-between border-neutral-800 border-b px-3 text-neutral-400 text-xs">
+    <figure className="my-5 overflow-hidden border border-[#373e47] bg-[#22272e]">
+      <figcaption className="flex h-9 items-center justify-between border-[#373e47] border-b px-3 text-[#768390] text-xs">
         <span className="font-mono">{language || "text"}</span>
         <button
-          className="inline-flex h-7 items-center gap-1.5 px-1.5 font-medium text-neutral-300 hover:text-white"
+          className="inline-flex h-7 items-center gap-1.5 px-1.5 font-medium text-[#adbac7] hover:text-white"
           type="button"
           onClick={copyCode}
           aria-label="Copy code"
@@ -141,8 +148,12 @@ function Fence({ content, language, children }: FenceProps) {
           <span>{copied ? "Copied" : "Copy"}</span>
         </button>
       </figcaption>
-      <pre className="m-0 overflow-auto p-4 font-mono text-[13px] text-neutral-100 leading-6">
-        <code className="whitespace-pre">{code}</code>
+      <pre className="m-0 overflow-auto p-4 font-mono text-[13px] text-[#adbac7] leading-6 [tab-size:2]">
+        {highlightedCode ? (
+          <code className="whitespace-pre" dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+        ) : (
+          <code className="whitespace-pre">{code}</code>
+        )}
       </pre>
     </figure>
   );

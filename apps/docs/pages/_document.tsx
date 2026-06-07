@@ -1,6 +1,6 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
-const devStylesheetHref = import.meta.env.DEV ? "/styles/globals.css?direct" : undefined;
+const devStylesheetHref = import.meta.env.DEV ? "/styles/tailwind.css?direct" : undefined;
 
 export default class DocsDocument extends Document {
   override render() {

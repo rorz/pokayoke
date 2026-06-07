@@ -3,6 +3,7 @@
   "name": "pokayoke-docs",
   "compatibility_date": "2026-06-07",
   "compatibility_flags": ["nodejs_compat"],
+  "main": "./worker/index.ts",
   "preview_urls": true,
   "routes": [
     {
@@ -15,7 +16,12 @@
     }
   ],
   "assets": {
-    "not_found_handling": "none"
+    "directory": "dist/client",
+    "not_found_handling": "none",
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
   },
   "observability": {
     "enabled": true

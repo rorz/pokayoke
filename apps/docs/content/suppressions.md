@@ -48,20 +48,3 @@ needed.
   }
 }
 ```
-
-## Legacy Directives
-
-Projects can map old suppression comments during migration.
-
-```jsonc
-{
-  "suppressions": {
-    "directive": "pokayoke-ignore",
-    "legacyDirectives": ["old-policy-ignore"],
-    "requireReason": true
-  }
-}
-```
-
-Legacy directives are a migration aid. New suppressions should use
-`pokayoke-ignore`.

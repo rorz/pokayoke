@@ -23,7 +23,6 @@ const files = {
   "ignores": ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
   "suppressions": {
     "directive": "pokayoke-ignore",
-    "legacyDirectives": [],
     "requireReason": true,
     "reportUnused": "warn"
   },

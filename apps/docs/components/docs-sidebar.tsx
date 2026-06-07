@@ -1,16 +1,18 @@
-import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, MagnifyingGlass, X } from "@phosphor-icons/react";
 import Link from "next/link";
 
-import { type Doc, pathForDoc } from "../lib/docs";
+import { type Doc, type NavSection, pathForDoc } from "../lib/docs";
 
-type NavSection = {
-  section: string;
-  docs: Doc[];
+export type SidebarHandoffLink = {
+  direction: "back" | "forward";
+  href: string;
+  label: string;
 };
 
 type DocsSidebarProps = {
   current: Doc;
   sections: NavSection[];
+  handoffLink: SidebarHandoffLink | undefined;
   query: string;
   sidebarOpen: boolean;
   onQueryChange: (query: string) => void;
@@ -20,6 +22,7 @@ type DocsSidebarProps = {
 export function DocsSidebar({
   current,
   sections,
+  handoffLink,
   query,
   sidebarOpen,
   onQueryChange,
@@ -54,32 +57,63 @@ export function DocsSidebar({
         </button>
       </div>
 
-      <nav className="grid gap-6" aria-label="Documentation">
-        {sections.map((section) => (
-          <div key={section.section}>
-            <p className="mb-2 font-medium text-[11px] text-neutral-400 uppercase leading-none">
-              {section.section}
-            </p>
-            <div className="grid gap-0.5">
-              {section.docs.map((doc) => (
-                <Link
-                  className={[
-                    "block border-l-2 py-1.5 pr-2 pl-3 text-[14px] leading-5",
-                    doc.slug === current.slug
-                      ? "border-neutral-950 font-medium text-neutral-950"
-                      : "border-transparent text-neutral-600 hover:border-neutral-300 hover:text-neutral-950",
-                  ].join(" ")}
-                  href={pathForDoc(doc)}
-                  key={doc.slug}
-                  onClick={onClose}
-                >
-                  {doc.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
+      <nav className="flex min-h-[calc(100%-4rem)] flex-col" aria-label="Documentation">
+        <div className="grid gap-6">
+          {sections.map((section) => (
+            <NavSectionLinks
+              current={current}
+              key={section.section}
+              onClose={onClose}
+              section={section}
+            />
+          ))}
+        </div>
+
+        {handoffLink ? (
+          <Link
+            className="mt-4 inline-flex items-center gap-1.5 border-transparent border-l-2 py-1.5 pr-2 pl-3 text-[13px] text-neutral-400 leading-5 hover:border-neutral-200 hover:text-neutral-700"
+            href={handoffLink.href}
+            onClick={onClose}
+          >
+            {handoffLink.direction === "back" ? <ArrowLeft aria-hidden="true" size={14} /> : null}
+            <span>{handoffLink.label}</span>
+            {handoffLink.direction === "forward" ? <ArrowRight aria-hidden="true" size={14} /> : null}
+          </Link>
+        ) : null}
       </nav>
     </aside>
+  );
+}
+
+type NavSectionLinksProps = {
+  current: Doc;
+  section: NavSection;
+  onClose: () => void;
+};
+
+function NavSectionLinks({ current, section, onClose }: NavSectionLinksProps) {
+  return (
+    <div>
+      <p className="mb-2 font-medium text-[11px] text-neutral-400 uppercase leading-none">
+        {section.section}
+      </p>
+      <div className="grid gap-0.5">
+        {section.docs.map((doc) => (
+          <Link
+            className={[
+              "block border-l-2 py-1.5 pr-2 pl-3 text-[14px] leading-5",
+              doc.slug === current.slug
+                ? "border-neutral-950 font-medium text-neutral-950"
+                : "border-transparent text-neutral-600 hover:border-neutral-300 hover:text-neutral-950",
+            ].join(" ")}
+            href={pathForDoc(doc)}
+            key={doc.slug}
+            onClick={onClose}
+          >
+            {doc.title}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

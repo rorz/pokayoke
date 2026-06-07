@@ -25,12 +25,11 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
         <Link className="inline-flex h-8 items-center" href="/" aria-label="pokayoke docs home">
           <PokayokeLogo aria-hidden="true" className="h-[20px] w-auto" />
         </Link>
-        <span className="hidden text-neutral-500 text-xs sm:inline">docs</span>
-
         <nav className="ml-auto flex items-center gap-1 text-xs" aria-label="Project links">
           <a
             className="inline-flex h-8 items-center gap-1.5 px-2 font-medium text-neutral-600 hover:text-neutral-950"
             href="https://github.com/rorz/pokayoke"
+            target="_blank"
           >
             <GithubLogo aria-hidden="true" className="text-red-500" size={16} weight="duotone" />
             <span>GitHub</span>
@@ -38,6 +37,7 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
           <a
             className="inline-flex h-8 items-center gap-1.5 px-2 font-medium text-neutral-600 hover:text-neutral-950"
             href="https://www.npmjs.com/package/pokayoke"
+            target="_blank"
           >
             <Package aria-hidden="true" className="text-red-500" size={16} weight="duotone" />
             <span>npm</span>

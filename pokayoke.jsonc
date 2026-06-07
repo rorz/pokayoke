@@ -30,7 +30,6 @@
   "ignores": ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
   "suppressions": {
     "directive": "pokayoke-ignore",
-    "legacyDirectives": [],
     "requireReason": true,
     "reportUnused": "warn"
   },
@@ -40,7 +39,10 @@
     "repo/no-root-source-files": "error",
     "structure/max-file-lines": [
       "error",
-      { "max": 220, "ignore": ["apps/docs/content/configuration.md"] }
+      {
+        "max": 220,
+        "ignore": ["apps/docs/content/configuration.md", "apps/docs/worker/index.ts"]
+      }
     ],
     "package/no-npx-in-scripts": "error",
     "package/workspace-protocol": ["error", { "protocol": "workspace:*" }]

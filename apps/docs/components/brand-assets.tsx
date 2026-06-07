@@ -11,7 +11,7 @@ export function PokayokeWordmark({ className }: WordmarkProps) {
     <span
       className={[
         "inline-flex items-baseline font-medium text-[17px] leading-none tracking-normal",
-        "brand-wordmark",
+        "[font-stretch:semi-expanded] [font-variation-settings:'wdth'_112.5]",
         className,
       ]
         .filter(Boolean)

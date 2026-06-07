@@ -9,6 +9,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { PokayokeIcon, PokayokeWordmark } from "../components/brand-assets";
+import { DocsFooter } from "../components/docs-footer";
 import { DocsTopbar } from "../components/docs-topbar";
 
 const statusBadges = [
@@ -17,21 +18,21 @@ const statusBadges = [
     href: "https://www.npmjs.com/package/pokayoke",
     src: "https://img.shields.io/npm/v/pokayoke?style=flat-square&label=npm",
   },
-  {
-    label: "monthly npm downloads",
-    href: "https://www.npmjs.com/package/pokayoke",
-    src: "https://img.shields.io/npm/dm/pokayoke?style=flat-square&label=downloads",
-  },
-  {
-    label: "GitHub release",
-    href: "https://github.com/rorz/pokayoke/releases",
-    src: "https://img.shields.io/github/v/release/rorz/pokayoke?style=flat-square&label=release",
-  },
-  {
-    label: "publish workflow",
-    href: "https://github.com/rorz/pokayoke/actions/workflows/publish.yml",
-    src: "https://img.shields.io/github/actions/workflow/status/rorz/pokayoke/publish.yml?branch=main&style=flat-square&label=publish",
-  },
+  // {
+  //   label: "monthly npm downloads",
+  //   href: "https://www.npmjs.com/package/pokayoke",
+  //   src: "https://img.shields.io/npm/dm/pokayoke?style=flat-square&label=downloads",
+  // },
+  // {
+  //   label: "GitHub release",
+  //   href: "https://github.com/rorz/pokayoke/releases",
+  //   src: "https://img.shields.io/github/v/release/rorz/pokayoke?style=flat-square&label=release",
+  // },
+  // {
+  //   label: "publish workflow",
+  //   href: "https://github.com/rorz/pokayoke/actions/workflows/publish.yml",
+  //   src: "https://img.shields.io/github/actions/workflow/status/rorz/pokayoke/publish.yml?branch=main&style=flat-square&label=publish",
+  // },
   {
     label: "license",
     href: "https://github.com/rorz/pokayoke/blob/main/LICENSE",
@@ -51,21 +52,18 @@ export default function HomePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="min-h-screen bg-white text-neutral-950">
+      <div className="flex min-h-screen flex-col bg-white font-sans text-neutral-950 antialiased">
         <DocsTopbar />
 
-        <main>
+        <main className="flex-1">
           <section className="border-neutral-200 border-b">
-            <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-[1440px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-16">
-              <div className="max-w-[860px]">
-                <p className="mb-4 font-medium text-[13px] text-neutral-500 leading-none">
-                  Repo policy tooling
-                </p>
+            <div className="mx-auto grid min-h-[80vh] max-w-[1440px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-16">
+              <div className="order-2 max-w-[860px] lg:order-1">
                 <h1 className="m-0 max-w-[820px]" aria-label="pokayoke">
                   <PokayokeWordmark className="text-[54px] leading-[0.98] sm:text-[76px] lg:text-[92px]" />
                 </h1>
                 <p className="mt-6 max-w-[640px] text-[18px] text-neutral-600 leading-8 sm:text-[20px]">
-                  Turn fragile repo conventions into checks that humans and
+                  Turn your repo conventions into checks that humans and
                   agents can run, understand, and repair.
                 </p>
 
@@ -75,6 +73,7 @@ export default function HomePage() {
                       className="inline-flex h-[22px] items-center overflow-hidden border border-neutral-200 bg-white transition-opacity hover:opacity-80"
                       href={badge.href}
                       key={badge.label}
+                      target="_blank"
                     >
                       <img alt={badge.label} className="h-[20px] w-auto" src={badge.src} />
                     </a>
@@ -92,6 +91,7 @@ export default function HomePage() {
                   <a
                     className="inline-flex h-10 items-center justify-center gap-2 border border-neutral-300 px-4 font-medium text-[14px] text-neutral-800 hover:border-neutral-950 hover:text-neutral-950"
                     href="https://github.com/rorz/pokayoke"
+                    target="_blank"
                   >
                     <GithubLogo aria-hidden="true" className="text-red-500" size={17} weight="duotone" />
                     GitHub
@@ -99,6 +99,7 @@ export default function HomePage() {
                   <a
                     className="inline-flex h-10 items-center justify-center gap-2 border border-neutral-300 px-4 font-medium text-[14px] text-neutral-800 hover:border-neutral-950 hover:text-neutral-950"
                     href="https://www.npmjs.com/package/pokayoke"
+                    target="_blank"
                   >
                     <Package aria-hidden="true" className="text-red-500" size={17} weight="duotone" />
                     npm
@@ -106,9 +107,16 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="flex items-center lg:justify-end">
-                <div className="home-icon-stage" aria-hidden="true">
-                  <PokayokeIcon className="home-icon-mark" />
+              <div className="order-1 flex items-center lg:order-2 lg:justify-end">
+                <div
+                  className="relative flex size-28 items-center justify-center sm:size-32 lg:size-[380px] [perspective:900px]"
+                  aria-hidden="true"
+                >
+                  <div className="absolute bottom-2 left-1/2 h-3 w-[68%] -translate-x-1/2 rounded-full bg-neutral-300/70 blur-[1px] lg:bottom-7 lg:h-5" />
+                  <div className="absolute bottom-5 left-1/2 h-5 w-[74%] -translate-x-1/2 rounded-b-[18px] border border-neutral-300 bg-neutral-200 shadow-[0_10px_18px_rgb(0_0_0_/_0.12)] lg:bottom-13 lg:h-12 lg:rounded-b-[32px] [transform:rotateX(68deg)]" />
+                  <div className="relative grid size-24 place-items-center rounded-[18px] border border-neutral-300 bg-neutral-50 shadow-[0_18px_38px_rgb(0_0_0_/_0.14),inset_0_1px_0_rgb(255_255_255_/_0.9),inset_0_-10px_18px_rgb(0_0_0_/_0.04)] sm:size-28 sm:rounded-[20px] lg:size-[340px] lg:rounded-[34px] lg:shadow-[0_30px_70px_rgb(0_0_0_/_0.15),inset_0_1px_0_rgb(255_255_255_/_0.9),inset_0_-28px_52px_rgb(0_0_0_/_0.06)] [transform:rotateX(8deg)_rotateY(-8deg)_rotateZ(1deg)] [transform-style:preserve-3d]">
+                    <PokayokeIcon className="size-[72%] drop-shadow-[0_12px_12px_rgb(0_0_0_/_0.16)] lg:drop-shadow-[0_18px_18px_rgb(0_0_0_/_0.16)]" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -137,16 +145,17 @@ export default function HomePage() {
             </Link>
             <Link
               className="group border border-neutral-200 p-5 hover:border-neutral-950"
-              href="/publishing"
+              href="/agent-setup"
             >
               <Package aria-hidden="true" className="mb-7 text-red-500" size={24} weight="duotone" />
-              <h2 className="m-0 font-semibold text-[17px] leading-6">Publishing</h2>
+              <h2 className="m-0 font-semibold text-[17px] leading-6">Agent setup</h2>
               <p className="mt-2 mb-0 text-[14px] text-neutral-600 leading-6">
-                Trusted publishing, release flow, npm tags, and dry runs.
+                Install pokayoke, add scripts, register local rules, and hand off cleanly.
               </p>
             </Link>
           </section>
         </main>
+        <DocsFooter />
       </div>
     </>
   );

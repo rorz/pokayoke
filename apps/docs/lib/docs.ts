@@ -8,7 +8,8 @@ import ruleAuthoringContent from "../content/rule-authoring.md?raw";
 import suppressionsContent from "../content/suppressions.md?raw";
 import whyPokayokeContent from "../content/why-pokayoke.md?raw";
 
-type DocSection = "Start" | "Concepts" | "Reference" | "Operations";
+type DocSection = "Start" | "Concepts" | "Reference" | "Maintainers";
+type DocAudience = "docs" | "maintenance";
 
 export type Doc = {
   slug: string;
@@ -16,6 +17,11 @@ export type Doc = {
   description: string;
   section: DocSection;
   content: string;
+};
+
+export type NavSection = {
+  section: DocSection;
+  docs: Doc[];
 };
 
 export type DocHeading = {
@@ -83,33 +89,52 @@ const docsSource: Doc[] = [
     slug: "adapters",
     title: "Adapters",
     description: "How existing tools can report through pokayoke.",
-    section: "Operations",
+    section: "Reference",
     content: adaptersContent,
   },
   {
-    slug: "publishing",
+    slug: "maintenance/publishing",
     title: "Publishing",
     description: "Trusted publishing and package release flow.",
-    section: "Operations",
+    section: "Maintainers",
     content: publishingContent,
   },
 ];
 
-const sectionOrder: DocSection[] = ["Start", "Concepts", "Reference", "Operations"];
+const docsSectionOrder: DocSection[] = ["Start", "Concepts", "Reference"];
+const maintenanceSectionOrder: DocSection[] = ["Maintainers"];
 
 export const docs = docsSource;
 
-export const navSections = sectionOrder.map((section) => ({
-  section,
-  docs: docs.filter((doc) => doc.section === section),
-}));
+function navSectionsFor(sectionOrder: DocSection[]): NavSection[] {
+  return sectionOrder
+    .map((section) => ({
+      section,
+      docs: docs.filter((doc) => doc.section === section),
+    }))
+    .filter((section) => section.docs.length > 0);
+}
+
+export const docsNavSections = navSectionsFor(docsSectionOrder);
+export const maintenanceNavSections = navSectionsFor(maintenanceSectionOrder);
 
 export function getDoc(slug: string): Doc | undefined {
   return docs.find((doc) => doc.slug === slug);
 }
 
 export function getAdjacentDocs(slug: string): AdjacentDocs {
-  const index = docs.findIndex((doc) => doc.slug === slug);
+  const current = getDoc(slug);
+
+  if (!current) {
+    return {
+      previous: undefined,
+      next: undefined,
+    };
+  }
+
+  const currentAudience = audienceForDoc(current);
+  const adjacentDocs = docs.filter((doc) => audienceForDoc(doc) === currentAudience);
+  const index = adjacentDocs.findIndex((doc) => doc.slug === slug);
 
   if (index < 0) {
     return {
@@ -119,9 +144,17 @@ export function getAdjacentDocs(slug: string): AdjacentDocs {
   }
 
   return {
-    previous: docs[index - 1],
-    next: docs[index + 1],
+    previous: adjacentDocs[index - 1],
+    next: adjacentDocs[index + 1],
   };
+}
+
+export function audienceForDoc(doc: Doc): DocAudience {
+  return doc.slug.startsWith("maintenance/") ? "maintenance" : "docs";
+}
+
+export function firstDocForAudience(audience: DocAudience): Doc | undefined {
+  return docs.find((doc) => audienceForDoc(doc) === audience);
 }
 
 export function pathForDoc(doc: Doc): string {

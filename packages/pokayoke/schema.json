@@ -42,12 +42,6 @@
         "fileLineLimit": {
           "type": "number"
         },
-        "legacyDirectives": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "requireReason": {
           "type": "boolean"
         },

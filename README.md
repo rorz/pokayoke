@@ -3,7 +3,6 @@
 [![npm](https://img.shields.io/npm/v/pokayoke?style=flat-square)](https://www.npmjs.com/package/pokayoke)
 [![npm downloads](https://img.shields.io/npm/dm/pokayoke?style=flat-square)](https://www.npmjs.com/package/pokayoke)
 [![GitHub](https://img.shields.io/github/stars/rorz/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke)
-[![publish](https://img.shields.io/github/actions/workflow/status/rorz/pokayoke/publish.yml?style=flat-square&label=publish)](https://github.com/rorz/pokayoke/actions/workflows/publish.yml)
 [![license](https://img.shields.io/npm/l/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke/blob/main/LICENSE)
 
 pokayoke is repo-policy tooling for convention checks that are awkward in
@@ -20,9 +19,9 @@ The docs site is the canonical source of truth for this project.
 - Local docs: run `bun run docs:dev`, then open `http://localhost:7870`
 - Canonical source files: `apps/docs/content/*.md`
 
-Keep this README short. Architecture, tooling, publishing, rule authoring,
-agent setup, suppressions, adapters, and policy details belong in the docs app.
-When the project changes, update the docs app in the same change.
+Keep this README short. Architecture, tooling, rule authoring, agent setup,
+suppressions, adapters, and policy details belong in the docs app. When the
+project changes, update the docs app in the same change.
 
 ## Project Shape
 
@@ -83,16 +82,6 @@ Build the docs site:
 bun run docs:build
 ```
 
-Inspect npm package contents:
-
-```sh
-bun run publish:check
-```
-
 ## Development Notes
 
 Use Bun for package management, scripts, tests, and runtime work.
-
-Packages intentionally publish TypeScript source for Bun rather than bundled
-JavaScript. Keep `exports`, `bin`, `files`, and peer dependency ranges valid for
-npm before publishing.

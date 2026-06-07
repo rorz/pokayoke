@@ -32,7 +32,7 @@ for Knip. A good rule points to one contract, reports one kind of drift, and
 names the repair path plainly.
 
 {% callout title="Repo shape" tone="success" %}
-This docs service owns the long-form project documentation. Keep architecture,
-tooling, policy, and publishing guidance here so agents and humans read one
-source of truth.
+This docs service owns the long-form project documentation. User-facing usage
+guidance lives in the main nav; repo maintenance notes live under the
+maintainer section.
 {% /callout %}
