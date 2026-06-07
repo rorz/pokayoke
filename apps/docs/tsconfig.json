@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["env.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", "content/**/*.md"],
+  "exclude": ["node_modules", ".vinext", "dist"]
+}

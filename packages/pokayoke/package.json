@@ -25,10 +25,14 @@
       "types": "./src/fixture-testing.ts",
       "import": "./src/fixture-testing.ts",
       "default": "./src/fixture-testing.ts"
+    },
+    "./schema.json": {
+      "default": "./schema.json"
     }
   },
   "files": [
     "src",
+    "schema.json",
     "!src/**/*.test.ts",
     "README.md"
   ],

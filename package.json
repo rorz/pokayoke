@@ -5,11 +5,17 @@
   "license": "MIT",
   "type": "module",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "start": "bun run packages/pokayoke/src/cli.ts",
     "dogfood": "bun run packages/pokayoke/src/cli.ts check",
+    "docs:dev": "bun run --filter @pokayoke/docs dev",
+    "docs:build": "bun run --filter @pokayoke/docs build",
+    "docs:start": "bun run --filter @pokayoke/docs start",
+    "docs:deploy": "bun run --filter @pokayoke/docs deploy",
+    "docs:typecheck": "bun run --filter @pokayoke/docs typecheck",
     "typecheck": "tsc --noEmit",
     "biome": "biome ci .",
     "biome:fix": "biome check --write .",

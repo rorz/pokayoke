@@ -24,10 +24,10 @@ pokayoke init
 The init command creates:
 
 ```txt
+pokayoke.jsonc
 .pokayoke/
-  config.ts
   rules/
-    no-root-source-files.ts
+    no-root-source-files.rule.ts
     no-root-source-files.test.ts
 ```
 
@@ -63,32 +63,23 @@ tests, type checks, or format checks.
 
 ## Configure Local Rules
 
-Use `.pokayoke/config.ts` for project-specific policy:
+Use `pokayoke.jsonc` for project-specific policy:
 
-```ts
-import { defineConfig, definePlugin } from "pokayoke";
-
-import { agentInstructionsInSync } from "./rules/agent-instructions-in-sync";
-
-export default defineConfig({
-  plugins: [
-    definePlugin({
-      name: "local",
-      rules: {
-        [agentInstructionsInSync.meta.id]: agentInstructionsInSync,
-      },
-    }),
-  ],
-  files: ["AGENTS.md", "docs/**/*.md", "packages/**/*.ts", "package.json"],
-  ignores: ["**/node_modules/**", "**/dist/**"],
-  rules: {
-    "agents/instructions-in-sync": "error",
-  },
-});
+```jsonc
+{
+  "extends": ["pokayoke/recommended"],
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "files": ["AGENTS.md", "apps/docs/content/**/*.md", "packages/**/*.ts", "package.json"],
+  "ignores": ["**/node_modules/**", "**/dist/**"],
+  "rules": {
+    "agents/instructions-in-sync": "error"
+  }
+}
 ```
 
-Write local rules in `.pokayoke/rules`. Keep them small and explicit.
-Add or keep a nearby test for every rule.
+Write local rules in `.pokayoke/rules` and use the `.rule.ts` suffix for files
+that should be imported during checks. Keep them small and explicit. Add or
+keep a nearby test for every rule.
 
 ## Agent Instruction Rails
 
@@ -112,7 +103,7 @@ Before finishing setup:
 - Run `pokayoke check`.
 - Run the local rule tests.
 - Run the repo's normal `check` script.
-- Confirm `.pokayoke/config.ts` loads successfully.
+- Confirm `pokayoke.jsonc` loads successfully.
 - Confirm local rules live under `.pokayoke/rules`.
 - Confirm `SKILL.md` tells agents how to configure pokayoke and author rules.
 - Confirm generated or mirrored agent docs have a clear source of truth.

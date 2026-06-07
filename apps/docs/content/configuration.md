@@ -1,22 +1,17 @@
 # Configuration
 
-pokayoke supports JSONC config, but the default authoring surface should be
-`.pokayoke/config.ts`. Local TypeScript config lets a project keep custom rules
-next to the policy that enables them.
+pokayoke uses one root config file: `pokayoke.jsonc`.
 
-Root config files still take priority. Use them when a repo needs an explicit
-override or a package wants to publish a plain JSONC policy.
+The root config is the human-facing policy surface. Repo-local TypeScript rule
+code lives under `.pokayoke/`, which is agent-maintained but human-reviewable.
 
-## Lookup Order
+## Config File
 
-1. `pokayoke.config.ts`
-2. `pokayoke.config.js`
-3. `pokayoke.jsonc`
-4. `.pokayoke/config.ts`
-5. `.pokayoke/pokayoke.ts`
-6. `.pokayoke/pokayoke.jsonc`
-7. `.pokayoke.jsonc`
-8. `package.json#pokayoke`
+The CLI only loads:
+
+```txt
+pokayoke.jsonc
+```
 
 ## Init
 
@@ -29,10 +24,10 @@ pokayoke init
 The command creates:
 
 ```txt
+pokayoke.jsonc
 .pokayoke/
-  config.ts
   rules/
-    no-root-source-files.ts
+    no-root-source-files.rule.ts
     no-root-source-files.test.ts
 ```
 
@@ -41,63 +36,67 @@ project intentionally wants to regenerate the starter files.
 
 ## Example
 
-```ts
-import { defineConfig, definePlugin } from "pokayoke";
-
-import { agentInstructionsInSync } from "./rules/agent-instructions-in-sync";
-
-export default defineConfig({
-  extends: ["pokayoke/recommended", "pokayoke/package-policy/bun-workspaces"],
-  plugins: [
-    definePlugin({
-      name: "local",
-      rules: {
-        [agentInstructionsInSync.meta.id]: agentInstructionsInSync,
-      },
-    }),
+```jsonc
+{
+  "$schema": "./node_modules/pokayoke/schema.json",
+  "extends": [
+    "pokayoke/recommended",
+    "pokayoke/typescript/recommended",
+    "pokayoke/package-policy/bun-workspaces"
   ],
-  files: ["apps/**", "packages/**", "scripts/**"],
-  ignores: [
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "files": ["apps/**", "packages/**", "scripts/**"],
+  "ignores": [
     "**/node_modules/**",
     "**/dist/**",
     "**/*.generated.ts",
-    "**/*.d.ts",
+    "**/*.d.ts"
   ],
-  suppressions: {
-    directive: "pokayoke-ignore",
-    legacyDirectives: [],
-    requireReason: true,
-    reportUnused: "warn",
+  "suppressions": {
+    "directive": "pokayoke-ignore",
+    "legacyDirectives": [],
+    "requireReason": true,
+    "reportUnused": "warn"
   },
-  rules: {
+  "rules": {
     "agents/instructions-in-sync": "error",
     "typescript/enforce-arrow-function": "error",
     "typescript/no-forward-reference": "error",
+    "typescript/no-optional-env": [
+      "warn",
+      {
+        "files": ["apps/**/src/env.ts", "packages/**/src/env.ts"]
+      }
+    ],
     "typescript/no-swallowed-errors": "error",
     "structure/max-file-lines": [
       "warn",
       {
-        max: 350,
-        ignore: ["**/*.generated.ts", "**/*.d.ts"],
-      },
+        "max": 350,
+        "ignore": ["**/*.generated.ts", "**/*.d.ts"]
+      }
     ],
-    "package/catalog": "error",
+    "package/catalog": "error"
   },
-  workspaces: {
+  "workspaces": {
     ".": {},
     "apps/*": {},
-    "packages/*": {},
+    "packages/*": {}
   },
-  adapters: {
-    knip: [
+  "adapters": {
+    "knip": [
       "warn",
       {
-        args: ["knip", "--no-progress"],
-      },
-    ],
-  },
-});
+        "args": ["knip", "--no-progress"]
+      }
+    ]
+  }
+}
 ```
+
+Files matched by `localRules` are imported by pokayoke at check time. Every
+exported value shaped like a rule, with `meta.id` and `run`, is registered under
+the local rule set.
 
 ## Rule Settings
 
@@ -113,6 +112,11 @@ Rule settings follow the common shape:
 ```
 
 Valid severities are `off`, `warn`, and `error`.
+
+`pokayoke/typescript/recommended` includes `typescript/no-forward-reference`,
+`typescript/no-optional-env`, and `typescript/no-swallowed-errors`. The env rule
+checks `**/src/env.ts` and `**/env.ts` by default; pass `files` when a project
+keeps its environment schema somewhere else.
 
 ## Baselines
 

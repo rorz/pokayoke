@@ -25,34 +25,23 @@ surfaces:
 Keep project-specific agent rules local:
 
 ```txt
+pokayoke.jsonc
 .pokayoke/
-  config.ts
   rules/
-    agent-instructions-in-sync.ts
-    skill-catalogue-in-sync.ts
-    no-phantom-cli-references.ts
+    agent-instructions-in-sync.rule.ts
+    skill-catalogue-in-sync.rule.ts
+    no-phantom-cli-references.rule.ts
 ```
 
-Then register those rules in `.pokayoke/config.ts`:
+Then enable them in `pokayoke.jsonc`:
 
-```ts
-import { defineConfig, definePlugin } from "pokayoke";
-
-import { agentInstructionsInSync } from "./rules/agent-instructions-in-sync";
-
-export default defineConfig({
-  plugins: [
-    definePlugin({
-      name: "local",
-      rules: {
-        [agentInstructionsInSync.meta.id]: agentInstructionsInSync,
-      },
-    }),
-  ],
-  rules: {
-    "agents/instructions-in-sync": "error",
-  },
-});
+```jsonc
+{
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "rules": {
+    "agents/instructions-in-sync": "error"
+  }
+}
 ```
 
 ## Rule Design

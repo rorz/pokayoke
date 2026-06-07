@@ -1,15 +1,6 @@
-import type { NormalizedRuleSetting, Plugin, RuleSetting, RuleSeverity } from "./types";
+import type { NormalizedRuleSetting, RuleSetting, RuleSeverity } from "./types";
 
-export const configLookupOrder = [
-  "pokayoke.config.ts",
-  "pokayoke.config.js",
-  "pokayoke.jsonc",
-  ".pokayoke/config.ts",
-  ".pokayoke/pokayoke.ts",
-  ".pokayoke/pokayoke.jsonc",
-  ".pokayoke.jsonc",
-  "package.json#pokayoke",
-] as const;
+export const configLookupOrder = ["pokayoke.jsonc"] as const;
 
 export type ConfigLookupTarget = (typeof configLookupOrder)[number];
 
@@ -26,7 +17,7 @@ export type Config = {
   extends?: string[];
   files?: string[];
   ignores?: string[];
-  plugins?: Plugin[];
+  localRules?: string[];
   suppressions?: SuppressionConfig;
   rules?: Record<string, RuleSetting>;
   overrides?: Array<{
@@ -58,58 +49,18 @@ export async function loadConfig(root: string): Promise<{
   path: string;
   config: Config;
 } | null> {
-  for (const target of configLookupOrder) {
-    if (target === "package.json#pokayoke") {
-      const packageJson = await readJsonIfExists(`${root}/package.json`);
-      const config = readPackageJsonConfig(packageJson);
+  const target = "pokayoke.jsonc";
+  const path = `${root}/${target}`;
+  const file = Bun.file(path);
 
-      if (config) {
-        return {
-          path: "package.json#pokayoke",
-          config,
-        };
-      }
-
-      continue;
-    }
-
-    const path = `${root}/${target}`;
-    const file = Bun.file(path);
-
-    if (!(await file.exists())) {
-      continue;
-    }
-
-    if (target.endsWith(".jsonc")) {
-      return {
-        path: target,
-        config: parseJsonc(await file.text()) as Config,
-      };
-    }
-
-    if (target.endsWith(".ts") || target.endsWith(".js")) {
-      return {
-        path: target,
-        config: await loadTypescriptConfig(path),
-      };
-    }
-
-    throw new Error(`Config loader for ${target} is not implemented.`);
+  if (!(await file.exists())) {
+    return null;
   }
 
-  return null;
-}
-
-async function loadTypescriptConfig(path: string): Promise<Config> {
-  const module = (await import(`${Bun.pathToFileURL(path).href}?t=${Date.now()}`)) as {
-    default?: unknown;
+  return {
+    path: target,
+    config: parseJsonc(await file.text()) as Config,
   };
-
-  if (!isRecord(module.default)) {
-    throw new Error(`${path} must default-export a pokayoke config object.`);
-  }
-
-  return module.default as Config;
 }
 
 export function parseJsonc(source: string): unknown {
@@ -189,32 +140,4 @@ export function stripJsonc(source: string): string {
   }
 
   return output;
-}
-
-async function readJsonIfExists(path: string): Promise<unknown> {
-  const file = Bun.file(path);
-
-  if (!(await file.exists())) {
-    return undefined;
-  }
-
-  return JSON.parse(await file.text());
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function readPackageJsonConfig(value: unknown): Config | undefined {
-  if (!isRecord(value)) {
-    return undefined;
-  }
-
-  const packageJson = value as { pokayoke?: unknown };
-
-  if (!isRecord(packageJson.pokayoke)) {
-    return undefined;
-  }
-
-  return packageJson.pokayoke as Config;
 }

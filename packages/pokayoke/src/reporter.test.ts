@@ -7,7 +7,7 @@ describe("formatStylish", () => {
     expect(
       formatStylish(
         {
-          configPath: ".pokayoke/config.ts",
+          configPath: "pokayoke.jsonc",
           files: ["package.json"],
           findings: [],
           rulesRun: ["package/no-npx-in-scripts"],

@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { parseTypescriptSource } from "../../ast";
 import type { AdapterResult, Finding, Rule, RuleContext } from "../../types";
 
-import { enforceArrowFunction, noForwardReference, noSwallowedErrors } from ".";
+import { enforceArrowFunction, noForwardReference, noOptionalEnv, noSwallowedErrors } from ".";
 
 describe("pokayoke/typescript", () => {
   test("detects function declarations when arrow functions are required", async () => {
@@ -28,10 +28,45 @@ describe("pokayoke/typescript", () => {
       await runRule(noSwallowedErrors, "try {} catch (error) { console.error(error); }"),
     ).toEqual([]);
   });
+
+  test("detects optional env schemas in env files", async () => {
+    expect(
+      await runRule(
+        noOptionalEnv,
+        "export const env = { OPTIONAL_KEY: z.string().optional() };",
+        "src/env.ts",
+      ),
+    ).toHaveLength(1);
+    expect(
+      await runRule(noOptionalEnv, "export const env = { REQUIRED_KEY: z.string().min(1) };"),
+    ).toEqual([]);
+  });
+
+  test("supports custom env schema file globs", async () => {
+    expect(
+      await runRule(
+        noOptionalEnv,
+        "export const env = { OPTIONAL_KEY: z.string().optional() };",
+        "config/schema.ts",
+        { files: ["config/*.ts"] },
+      ),
+    ).toHaveLength(1);
+    expect(
+      await runRule(
+        noOptionalEnv,
+        "export const env = { OPTIONAL_KEY: z.string().optional() };",
+        "config/schema.ts",
+      ),
+    ).toEqual([]);
+  });
 });
 
-async function runRule(rule: Rule, source: string): Promise<Finding[]> {
-  const file = "fixture.ts";
+async function runRule(
+  rule: Rule,
+  source: string,
+  file = "fixture.ts",
+  options?: unknown,
+): Promise<Finding[]> {
   const reported: Finding[] = [];
   const context: RuleContext = {
     execAdapter: async (): Promise<AdapterResult> => ({
@@ -41,7 +76,8 @@ async function runRule(rule: Rule, source: string): Promise<Finding[]> {
     }),
     files: async () => [file],
     fix: false,
-    options: undefined,
+    glob: async () => [file],
+    options,
     packageJson: async () => ({}),
     parseTypescript: async () => parseTypescriptSource(file, source),
     readFile: async () => source,

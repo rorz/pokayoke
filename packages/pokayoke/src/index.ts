@@ -26,7 +26,7 @@ export {
   type SuppressionConfig,
   stripJsonc,
 } from "./config";
-export { defineConfig, definePlugin, definePreset, defineRule } from "./define";
+export { definePlugin, definePreset, defineRule } from "./define";
 export { type CheckOptions, type CheckResult, runCheck } from "./engine";
 export {
   checkGeneratedText,
@@ -44,6 +44,7 @@ export {
   noBannedText,
   noForwardReference,
   noNpxInScripts,
+  noOptionalEnv,
   noSwallowedErrors,
   requiredText,
   workspaceProtocol,

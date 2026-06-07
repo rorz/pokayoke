@@ -29,12 +29,13 @@ describe("pokayoke core", () => {
     expect(isEnabledSeverity("error")).toBe(true);
   });
 
-  test("renders a summary with config lookup order", () => {
+  test("renders a summary with the config file", () => {
     const summary = renderProjectSummary();
     const firstTarget = configLookupOrder.at(0);
 
     expect(summary).toContain("pokayoke");
     expect(summary).toContain("Rule kinds:");
+    expect(summary).toContain("Config file:");
     expect(firstTarget).toBeDefined();
     expect(summary).toContain(firstTarget ?? "");
   });

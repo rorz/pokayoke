@@ -1,0 +1,63 @@
+{
+  "$schema": "./packages/pokayoke/schema.json",
+  "extends": [
+    "pokayoke/recommended",
+    "pokayoke/typescript/recommended",
+    "pokayoke/package-policy/bun-workspaces"
+  ],
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "files": [
+    ".pokayoke/**/*.ts",
+    ".github/**/*.yml",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "SKILL.md",
+    "apps/docs/**/*.json",
+    "apps/docs/**/*.jsonc",
+    "apps/docs/**/*.md",
+    "apps/docs/**/*.ts",
+    "apps/docs/**/*.tsx",
+    "examples/**/*.jsonc",
+    "examples/**/*.ts",
+    "packages/**/*.json",
+    "packages/**/*.ts",
+    "package.json",
+    "tsconfig.json",
+    "biome.jsonc",
+    "knip.jsonc"
+  ],
+  "ignores": ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
+  "suppressions": {
+    "directive": "pokayoke-ignore",
+    "legacyDirectives": [],
+    "requireReason": true,
+    "reportUnused": "warn"
+  },
+  "rules": {
+    "agents/instructions-in-sync": "error",
+    "docs/canonical-source": "error",
+    "repo/no-root-source-files": "error",
+    "structure/max-file-lines": [
+      "error",
+      { "max": 220, "ignore": ["apps/docs/content/configuration.md"] }
+    ],
+    "package/no-npx-in-scripts": "error",
+    "package/workspace-protocol": ["error", { "protocol": "workspace:*" }]
+  },
+  "adapters": {
+    "biome": ["error", { "args": ["biome", "ci", "."] }],
+    "knip": [
+      "error",
+      {
+        "args": [
+          "knip",
+          "--strict",
+          "--no-progress",
+          "--treat-config-hints-as-errors",
+          "--treat-tag-hints-as-errors"
+        ]
+      }
+    ]
+  }
+}

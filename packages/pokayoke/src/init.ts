@@ -15,37 +15,27 @@ export type InitResult = {
 };
 
 const files = {
-  ".pokayoke/config.ts": `import { defineConfig, definePlugin } from "pokayoke";
-
-import { noRootSourceFiles } from "./rules/no-root-source-files";
-
-export default defineConfig({
-  extends: ["pokayoke/recommended"],
-  plugins: [
-    definePlugin({
-      name: "local",
-      rules: {
-        [noRootSourceFiles.meta.id]: noRootSourceFiles,
-      },
-    }),
-  ],
-  files: ["AGENTS.md", "SKILL.md", "README.md", "docs/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
-  ignores: ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
-  suppressions: {
-    directive: "pokayoke-ignore",
-    legacyDirectives: [],
-    requireReason: true,
-    reportUnused: "warn",
+  "pokayoke.jsonc": `{
+  "$schema": "./node_modules/pokayoke/schema.json",
+  "extends": ["pokayoke/recommended"],
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "files": ["AGENTS.md", "SKILL.md", "README.md", "apps/docs/content/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
+  "ignores": ["**/node_modules/**", "**/dist/**", "**/*.d.ts"],
+  "suppressions": {
+    "directive": "pokayoke-ignore",
+    "legacyDirectives": [],
+    "requireReason": true,
+    "reportUnused": "warn"
   },
-  rules: {
+  "rules": {
     "repo/no-root-source-files": "error",
-    "structure/max-file-lines": ["error", { max: 350 }],
-  },
-});
+    "structure/max-file-lines": ["error", { "max": 350 }]
+  }
+}
 `,
-  ".pokayoke/rules/no-root-source-files.ts": `import { defineRule } from "pokayoke";
+  ".pokayoke/rules/no-root-source-files.rule.ts": `import type { Rule } from "pokayoke";
 
-export const noRootSourceFiles = defineRule({
+export const noRootSourceFiles: Rule = {
   meta: {
     id: "repo/no-root-source-files",
     docs: "Keep source files inside packages instead of a root src folder.",
@@ -53,31 +43,33 @@ export const noRootSourceFiles = defineRule({
   },
   async run(context) {
     const findings = [];
-    const patterns = ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"];
 
-    for (const pattern of patterns) {
-      const glob = new Bun.Glob(pattern);
+    const rootSourceFiles = await context.glob([
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx",
+    ]);
 
-      for await (const file of glob.scan({ cwd: context.root, onlyFiles: true })) {
-        findings.push({
-          ruleId: "repo/no-root-source-files",
-          severity: "error" as const,
-          message: "Root source files are not allowed in this workspace.",
-          file,
-          advice: "Move source code into a package or remove the stale root src file.",
-        });
-      }
+    for (const file of rootSourceFiles) {
+      findings.push({
+        ruleId: "repo/no-root-source-files",
+        severity: "error" as const,
+        message: "Root source files are not allowed in this workspace.",
+        file,
+        advice: "Move source code into a package or remove the stale root src file.",
+      });
     }
 
     return { findings };
   },
-});
+};
 `,
   ".pokayoke/rules/no-root-source-files.test.ts": `import { describe, expect, test } from "bun:test";
 import { mkdir, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-import { noRootSourceFiles } from "./no-root-source-files";
+import { noRootSourceFiles } from "./no-root-source-files.rule";
 
 describe("repo/no-root-source-files", () => {
   test("reports source files at the repository root", async () => {
@@ -90,6 +82,7 @@ describe("repo/no-root-source-files", () => {
       execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
       files: async () => [],
       fix: false,
+      glob: async () => ["src/index.ts"],
       options: undefined,
       packageJson: async () => ({}),
       parseTypescript: async () => {

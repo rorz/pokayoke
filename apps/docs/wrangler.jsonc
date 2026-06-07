@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "pokayoke-docs",
+  "compatibility_date": "2026-06-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "preview_urls": true,
+  "routes": [
+    {
+      "pattern": "pokayoke.codes",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.pokayoke.codes",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "not_found_handling": "none"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdir, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-import { noRootSourceFiles } from "./no-root-source-files";
+import { noRootSourceFiles } from "./no-root-source-files.rule";
 
 describe("repo/no-root-source-files", () => {
   test("reports source files at the repository root", async () => {
@@ -15,6 +15,7 @@ describe("repo/no-root-source-files", () => {
       execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
       files: async () => [],
       fix: false,
+      glob: async () => ["src/index.ts"],
       options: undefined,
       packageJson: async () => ({}),
       parseTypescript: async () => {

@@ -12,10 +12,14 @@ match the shape of the policy.
 
 ## API
 
-```ts
-import { defineRule } from "pokayoke";
+Local rules live in `.pokayoke/rules` and are loaded from the `localRules`
+globs in `pokayoke.jsonc`. Use the `.rule.ts` suffix for modules that should be
+imported during checks.
 
-export const noExample = defineRule({
+```ts
+import type { Rule } from "pokayoke";
+
+export const noExample: Rule = {
   meta: {
     id: "patterns/no-example",
     docs: "Explain the convention this rule protects.",
@@ -41,7 +45,7 @@ export const noExample = defineRule({
 
     return { findings };
   },
-});
+};
 ```
 
 ## Context
@@ -50,6 +54,7 @@ The rule context should expose:
 
 - `context.root`
 - `context.files()`
+- `context.glob()`
 - `context.readFile()`
 - `context.parseTypescript()`
 - `context.packageJson()`
@@ -76,6 +81,8 @@ import {
 ```
 
 - `context.parseTypescript(file)`: cached TypeScript `SourceFile` parsing.
+- `context.glob(patterns)`: repo-relative file discovery outside configured
+  `files`.
 - `locate(source, index)`: one-indexed line and column.
 - `lineAt(source, index)`: full source line for an offset.
 - `previousLine(source, index)`: previous source line for suppression-style checks.
@@ -109,7 +116,7 @@ and fix mode:
 
 ```ts
 if (context.fix) {
-  await syncGeneratedText(context.root, "docs/catalogue.md", expected);
+  await syncGeneratedText(context.root, "apps/docs/content/catalogue.md", expected);
   return { findings: [] };
 }
 
@@ -117,7 +124,7 @@ return {
   findings: checkGeneratedText({
     actual,
     expected,
-    file: "docs/catalogue.md",
+    file: "apps/docs/content/catalogue.md",
     ruleId: "agents/catalogue-in-sync",
     syncCommand: "pokayoke check --fix",
   }),

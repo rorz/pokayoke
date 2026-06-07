@@ -44,6 +44,7 @@ export type RuleContext<TOptions = unknown> = {
   fix: boolean;
   options: TOptions;
   files: () => Promise<string[]>;
+  glob: (patterns: string | string[]) => Promise<string[]>;
   readFile: (file: string) => Promise<string>;
   parseTypescript: (file: string) => Promise<ts.SourceFile>;
   packageJson: (workspace?: string) => Promise<unknown>;

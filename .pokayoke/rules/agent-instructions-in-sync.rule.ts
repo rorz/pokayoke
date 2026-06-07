@@ -1,7 +1,6 @@
-import type { Finding } from "pokayoke";
-import { defineRule } from "pokayoke";
+import type { Finding, Rule } from "pokayoke";
 
-export const agentInstructionsInSync = defineRule({
+export const agentInstructionsInSync: Rule = {
   meta: {
     id: "agents/instructions-in-sync",
     docs: "Keep mirrored agent instruction files synchronized.",
@@ -44,7 +43,7 @@ export const agentInstructionsInSync = defineRule({
 
     return { findings };
   },
-});
+};
 
 async function readOptional(root: string, path: string): Promise<string | undefined> {
   const file = Bun.file(`${root}/${path}`);

@@ -32,35 +32,27 @@ pokayoke to the gate.
 
 ## Local Rule Shape
 
-Use `.pokayoke/config.ts` as the normal policy surface:
+Use `pokayoke.jsonc` as the human-facing policy surface:
 
-```ts
-import { defineConfig, definePlugin } from "pokayoke";
-
-import { noRootSourceFiles } from "./rules/no-root-source-files";
-
-export default defineConfig({
-  plugins: [
-    definePlugin({
-      name: "local",
-      rules: {
-        [noRootSourceFiles.meta.id]: noRootSourceFiles,
-      },
-    }),
-  ],
-  files: ["AGENTS.md", "SKILL.md", "docs/**/*.md", "packages/**/*.ts"],
-  rules: {
-    "repo/no-root-source-files": "error",
-  },
-});
+```jsonc
+{
+  "extends": ["pokayoke/recommended"],
+  "localRules": [".pokayoke/rules/**/*.rule.ts"],
+  "files": ["AGENTS.md", "SKILL.md", "apps/docs/content/**/*.md", "packages/**/*.ts"],
+  "rules": {
+    "repo/no-root-source-files": "error"
+  }
+}
 ```
 
-Rules should be small TypeScript files:
+Keep repo-specific rule code in `.pokayoke/rules`. Treat `.pokayoke` as
+agent-maintained but human-reviewable: agents can scaffold and revise it, and
+humans should still review it like any other policy code.
 
 ```ts
-import { defineRule } from "pokayoke";
+import type { Rule } from "pokayoke";
 
-export const noRootSourceFiles = defineRule({
+export const noRootSourceFiles: Rule = {
   meta: {
     id: "repo/no-root-source-files",
     docs: "Keep source files inside packages instead of a root src folder.",
@@ -83,7 +75,7 @@ export const noRootSourceFiles = defineRule({
 
     return { findings };
   },
-});
+};
 ```
 
 ## Rule Categories
@@ -95,6 +87,7 @@ export const noRootSourceFiles = defineRule({
 Use built-in helpers from `pokayoke` for common rule work:
 
 - `context.parseTypescript(file)` for cached TypeScript AST parsing.
+- `context.glob(patterns)` for repo-relative file discovery outside `files`.
 - `checkGeneratedText()` and `syncGeneratedText()` for generated artifacts.
 - `locate()`, `lineAt()`, and `previousLine()` for source locations.
 - `findingKey()` for baseline entries.
@@ -117,7 +110,7 @@ When a generated file can be repaired mechanically, support `context.fix`:
 
 ```ts
 if (context.fix) {
-  await syncGeneratedText(context.root, "docs/catalogue.md", expected);
+  await syncGeneratedText(context.root, "apps/docs/content/catalogue.md", expected);
   return { findings: [] };
 }
 
@@ -125,7 +118,7 @@ return {
   findings: checkGeneratedText({
     actual,
     expected,
-    file: "docs/catalogue.md",
+    file: "apps/docs/content/catalogue.md",
     ruleId: "agents/catalogue-in-sync",
     syncCommand: "pokayoke check --fix",
   }),
@@ -171,8 +164,16 @@ testRuleFixtures({
 ## Publishing
 
 Use the repository publishing workflow instead of ad hoc npm commands. Read
-`docs/publishing.md`, run `bun run pack:dry-run`, and publish through
+`apps/docs/content/publishing.md`, run `bun run pack:dry-run`, and publish through
 `.github/workflows/publish.yml`.
+
+## Documentation Source
+
+For this repository, the docs site is the canonical source of truth. Keep
+long-form project documentation in `apps/docs/content/*.md`, exposed as
+root-level docs routes. Keep README as a short doorway, and update docs content
+in the same change as architecture, tooling, policy, publishing, or workflow
+changes.
 
 ## Handoff
 
@@ -180,7 +181,7 @@ Before finishing pokayoke work:
 
 - run `bun run check` when available
 - run `bun run pokayoke check` or the repo's equivalent
-- verify `.pokayoke/config.ts` loads
+- verify `pokayoke.jsonc` loads
 - verify local rules have tests
 - verify agent-facing docs have a declared source of truth
 - report any rule that is intentionally planned but not implemented

@@ -1,5 +1,10 @@
 # pokayoke
 
+[![npm](https://img.shields.io/npm/v/pokayoke?style=flat-square)](https://www.npmjs.com/package/pokayoke)
+[![npm downloads](https://img.shields.io/npm/dm/pokayoke?style=flat-square)](https://www.npmjs.com/package/pokayoke)
+[![GitHub](https://img.shields.io/github/stars/rorz/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke)
+[![license](https://img.shields.io/npm/l/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke/blob/main/LICENSE)
+
 repo-policy tooling for convention checks that humans and agents can both run.
 
 ```sh
@@ -9,7 +14,7 @@ bun run pokayoke check
 ```
 
 pokayoke is intentionally shipped as TypeScript source for Bun. It does not
-bundle rules; repo-local policy lives in `.pokayoke/config.ts` and
-`.pokayoke/rules`.
+bundle repo-specific rules; repo-local policy lives in `pokayoke.jsonc` and
+agent-maintained rule code lives in `.pokayoke/rules`.
 
-See the repository README and `SKILL.md` for rule-authoring guidance.
+The canonical project docs live at [pokayoke.codes](https://pokayoke.codes).

@@ -31,7 +31,7 @@ export async function runCheck(options: CheckOptions = {}): Promise<CheckResult>
   const root = options.root ?? process.cwd();
   const loadedConfig = await loadConfig(root);
   const config = loadedConfig?.config ?? {};
-  const plugins = await loadPlugins(config);
+  const plugins = await loadPlugins(config, root);
   const registry = buildRuleRegistry(plugins);
   const ruleSettings = resolveRuleSettings(config, plugins);
   const fix = options.fix ?? false;
@@ -85,6 +85,8 @@ export async function runCheck(options: CheckOptions = {}): Promise<CheckResult>
       root,
       options: setting.options,
       files: async () => files,
+      glob: async (patterns: string | string[]) =>
+        collectFiles(root, Array.isArray(patterns) ? patterns : [patterns], defaultIgnores),
       readFile,
       parseTypescript: async (file: string) => {
         const cached = astCache.get(file);

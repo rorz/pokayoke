@@ -4,7 +4,7 @@ import { relative, resolve } from "node:path";
 
 import { parseTypescriptSource } from "./ast";
 import type { AdapterResult, Finding, Rule, RuleContext } from "./types";
-import { discoverWorkspaces, readPackageJson } from "./workspace";
+import { collectFiles, discoverWorkspaces, readPackageJson } from "./workspace";
 
 export type RuleFixtureOptions<TOptions = unknown> = {
   bad?: string;
@@ -52,6 +52,8 @@ async function runFixtureRule<TOptions>(
     }),
     files: async () => [file],
     fix: false,
+    glob: async (patterns: string | string[]) =>
+      collectFiles(root, Array.isArray(patterns) ? patterns : [patterns]),
     options: options.options as TOptions,
     packageJson: async (workspace?: string) => readPackageJson(root, workspace),
     parseTypescript: async (target: string) =>

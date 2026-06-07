@@ -28,7 +28,7 @@ export function renderProjectSummary(): string {
     "Rule kinds:",
     ...ruleKinds.map((kind) => `- ${kind}`),
     "",
-    "Config lookup order:",
+    "Config file:",
     ...configLookupOrder.map((target) => `- ${target}`),
     "",
     "MVP order:",

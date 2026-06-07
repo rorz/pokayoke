@@ -15,6 +15,7 @@ export {
 export {
   enforceArrowFunction,
   noForwardReference,
+  noOptionalEnv,
   noSwallowedErrors,
 } from "./typescript";
 

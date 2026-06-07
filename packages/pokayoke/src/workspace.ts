@@ -16,7 +16,7 @@ export async function collectFiles(
   for (const pattern of patterns) {
     const glob = new Bun.Glob(pattern);
 
-    for await (const file of glob.scan({ cwd: root, onlyFiles: true })) {
+    for await (const file of glob.scan({ cwd: root, dot: true, onlyFiles: true })) {
       if (!ignoreGlobs.some((ignore) => ignore.match(file))) {
         files.add(file);
       }

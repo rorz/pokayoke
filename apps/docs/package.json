@@ -1,0 +1,33 @@
+{
+  "name": "@pokayoke/docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinext dev -p 7870",
+    "build": "vinext build",
+    "start": "vinext start -p 7870",
+    "deploy": "vinext deploy --name pokayoke-docs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/zalando-sans": "^5.2.2",
+    "@markdoc/markdoc": "^0.5.7",
+    "@phosphor-icons/react": "^2.1.10",
+    "next": "^16.2.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.0",
+    "vinext": "^0.0.55"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.40.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.16",
+    "wrangler": "^4.98.0"
+  }
+}
