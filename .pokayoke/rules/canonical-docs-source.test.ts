@@ -17,7 +17,6 @@ describe("docs/canonical-source", () => {
     ]);
 
     const result = await canonicalDocsSource.run({
-      execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
       files: async () => [],
       fix: false,
       glob: async (patterns) => {
@@ -66,7 +65,6 @@ describe("docs/canonical-source", () => {
     ]);
 
     const result = await canonicalDocsSource.run({
-      execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
       files: async () => [],
       fix: false,
       glob: async (patterns) => {

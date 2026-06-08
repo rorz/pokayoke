@@ -8,7 +8,8 @@
     "module": "Preserve",
     "moduleResolution": "bundler",
     "noEmit": true,
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "resolveJsonModule": true
   },
   "include": ["env.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", "content/**/*.md"],
   "exclude": ["node_modules", ".vinext", "dist"]

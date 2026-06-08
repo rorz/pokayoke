@@ -113,7 +113,7 @@ For more information, read the Bun API docs in `node_modules/bun-types/docs/**.m
 ## Documentation Source Of Truth
 
 The docs site is the canonical source of truth for this project. Long-form
-architecture, tooling, publishing, policy, rule design, adapter, and agent
+architecture, tooling, publishing, policy, rule design, and agent
 workflow documentation lives in `apps/docs/content/**/*.md` and is exposed through
 root-level docs routes such as `/configuration` and `/rule-design`.
 

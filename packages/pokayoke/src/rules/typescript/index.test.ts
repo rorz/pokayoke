@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { parseTypescriptSource } from "../../ast";
-import type { AdapterResult, Finding, Rule, RuleContext } from "../../types";
+import type { Finding, Rule, RuleContext } from "../../types";
 
 import { enforceArrowFunction, noForwardReference, noOptionalEnv, noSwallowedErrors } from ".";
 
@@ -69,11 +69,6 @@ async function runRule(
 ): Promise<Finding[]> {
   const reported: Finding[] = [];
   const context: RuleContext = {
-    execAdapter: async (): Promise<AdapterResult> => ({
-      exitCode: 0,
-      stderr: "",
-      stdout: "",
-    }),
     files: async () => [file],
     fix: false,
     glob: async () => [file],

@@ -22,11 +22,9 @@ Before writing code, answer five questions:
 - `file`: checks one configured file at a time.
 - `project`: checks the repo, workspace graph, package metadata, docs, or
   generated artifacts.
-- `adapter`: shells out to another tool and normalizes the result.
 
 Use `file` rules for source-pattern and AST checks. Use `project` rules when
-the policy depends on several files or the repository shape. Use `adapter`
-rules when an existing tool already owns the analysis.
+the policy depends on several files or the repository shape.
 
 ## Local Rule Files
 
@@ -191,7 +189,6 @@ Useful context methods:
 - `context.parseTypescript(file)`: cached TypeScript parsing.
 - `context.packageJson(workspace)`: package metadata.
 - `context.workspaces()`: discovered workspaces.
-- `context.execAdapter(command, args)`: tool execution for adapter rules.
 
 Useful imports:
 

@@ -11,8 +11,8 @@ import {
 } from "./index";
 
 describe("pokayoke core", () => {
-  test("models the three rule kinds", () => {
-    expect(ruleKinds).toEqual(["file", "project", "adapter"]);
+  test("models the rule kinds", () => {
+    expect(ruleKinds).toEqual(["file", "project"]);
   });
 
   test("normalizes scalar and tuple rule settings", () => {

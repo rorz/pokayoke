@@ -81,12 +81,6 @@
     "workspaces": {
       "type": "object"
     },
-    "adapters": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/$defs/ruleSetting"
-      }
-    },
     "baseline": {
       "type": "object",
       "additionalProperties": {

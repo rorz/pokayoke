@@ -9,7 +9,7 @@ import {
   unusedSuppressionFindings,
   validateSuppressions,
 } from "./suppressions";
-import type { AdapterResult, Finding } from "./types";
+import type { Finding } from "./types";
 import { collectFiles, discoverWorkspaces, readPackageJson } from "./workspace";
 
 const defaultIgnores = ["**/node_modules/**", "**/.git/**"];
@@ -103,19 +103,6 @@ export async function runCheck(options: CheckOptions = {}): Promise<CheckResult>
       workspaces: async () => discoverWorkspaces(root),
       report: (finding: Finding) => {
         reported.push(finding);
-      },
-      execAdapter: async (command: string, args: string[] = []): Promise<AdapterResult> => {
-        const proc = Bun.spawn([command, ...args], {
-          cwd: root,
-          stdout: "pipe",
-          stderr: "pipe",
-        });
-
-        return {
-          exitCode: await proc.exited,
-          stdout: await new Response(proc.stdout).text(),
-          stderr: await new Response(proc.stderr).text(),
-        };
       },
     };
     const result = await rule.run(context);

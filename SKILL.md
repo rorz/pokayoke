@@ -82,7 +82,6 @@ export const noRootSourceFiles: Rule = {
 
 - `file`: source-pattern or AST checks.
 - `project`: whole-repo checks, generated artifacts, workspace policy, docs.
-- `adapter`: wrappers around tools such as Biome or Knip.
 
 Use built-in helpers from `pokayoke` for common rule work:
 

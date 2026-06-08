@@ -1,6 +1,7 @@
 import { GithubLogo, List, Package } from "@phosphor-icons/react";
 import Link from "next/link";
 
+import pokayokePackage from "../../../packages/pokayoke/package.json";
 import { PokayokeLogo } from "./brand-assets";
 
 type DocsTopbarProps = {
@@ -25,10 +26,14 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
         <Link className="inline-flex h-8 items-center" href="/" aria-label="pokayoke docs home">
           <PokayokeLogo aria-hidden="true" className="h-8 w-auto" />
         </Link>
+        <span className="-ml-1 border-neutral-200 border-l pl-2 font-mono text-[11px] text-neutral-400 leading-none">
+          v{pokayokePackage.version}
+        </span>
         <nav className="ml-auto flex items-center gap-1 text-xs" aria-label="Project links">
           <a
             className="inline-flex h-8 items-center gap-1.5 px-2 font-medium text-neutral-600 hover:text-neutral-950"
             href="https://github.com/rorz/pokayoke"
+            rel="noopener"
             target="_blank"
           >
             <GithubLogo aria-hidden="true" className="text-red-500" size={16} weight="duotone" />
@@ -37,6 +42,7 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
           <a
             className="inline-flex h-8 items-center gap-1.5 px-2 font-medium text-neutral-600 hover:text-neutral-950"
             href="https://www.npmjs.com/package/pokayoke"
+            rel="noopener"
             target="_blank"
           >
             <Package aria-hidden="true" className="text-red-500" size={16} weight="duotone" />

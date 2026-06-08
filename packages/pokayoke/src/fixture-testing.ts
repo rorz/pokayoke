@@ -3,7 +3,7 @@ import { readdirSync, statSync } from "node:fs";
 import { relative, resolve } from "node:path";
 
 import { parseTypescriptSource } from "./ast";
-import type { AdapterResult, Finding, Rule, RuleContext } from "./types";
+import type { Finding, Rule, RuleContext } from "./types";
 import { collectFiles, discoverWorkspaces, readPackageJson } from "./workspace";
 
 export type RuleFixtureOptions<TOptions = unknown> = {
@@ -45,11 +45,6 @@ async function runFixtureRule<TOptions>(
   const file = relative(root, absoluteFile);
   const reported: Finding[] = [];
   const context: RuleContext<TOptions> = {
-    execAdapter: async (): Promise<AdapterResult> => ({
-      exitCode: 127,
-      stderr: "Adapters are not available in rule fixture tests.",
-      stdout: "",
-    }),
     files: async () => [file],
     fix: false,
     glob: async (patterns: string | string[]) =>

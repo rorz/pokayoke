@@ -24,7 +24,6 @@ export type Config = {
     rules: Record<string, RuleSetting>;
   }>;
   workspaces?: Record<string, unknown>;
-  adapters?: Record<string, RuleSetting>;
   baseline?: Record<string, string[]>;
 };
 

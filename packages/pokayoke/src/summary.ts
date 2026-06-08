@@ -7,7 +7,7 @@ export const projectPositioning = [
   "Built for humans and agents to consume the same conventions.",
 ] as const;
 
-export const ruleKinds = ["file", "project", "adapter"] as const;
+export const ruleKinds = ["file", "project"] as const;
 
 export const mvpOrder = [
   "CLI, config loader, JSONC parser, and schema validation.",
@@ -15,7 +15,6 @@ export const mvpOrder = [
   "Terminal and JSON reporters.",
   "Suppression parser with required reasons and unused-suppression reporting.",
   "Generic TypeScript, package policy, and pattern rules.",
-  "Adapter rules for existing tools.",
   "Fix support after the reporting model is stable.",
 ] as const;
 

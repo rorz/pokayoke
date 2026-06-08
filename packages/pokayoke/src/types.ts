@@ -1,6 +1,6 @@
 import type ts from "typescript";
 
-export type RuleKind = "file" | "project" | "adapter";
+export type RuleKind = "file" | "project";
 
 export type RuleSeverity = "off" | "warn" | "error";
 
@@ -28,12 +28,6 @@ export type RuleResult = {
   findings: Finding[];
 };
 
-export type AdapterResult = {
-  exitCode: number;
-  stdout: string;
-  stderr: string;
-};
-
 export type Workspace = {
   name: string;
   root: string;
@@ -50,7 +44,6 @@ export type RuleContext<TOptions = unknown> = {
   packageJson: (workspace?: string) => Promise<unknown>;
   workspaces: () => Promise<Workspace[]>;
   report: (finding: Finding) => void;
-  execAdapter: (command: string, args?: string[]) => Promise<AdapterResult>;
 };
 
 export type Rule<TOptions = unknown> = {

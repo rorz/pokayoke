@@ -22,19 +22,17 @@ describe("docs/published-rules-documented", () => {
 
 function completeReference(): string {
   return [
-    "# Rules",
+    "| Preset | Includes |",
+    "| --- | --- |",
+    ...expectedPublishedPresetNames().map((preset) => `| \`${preset}\` | test fixture |`),
     "",
-    "## Presets",
-    ...expectedPublishedPresetNames().map((preset) => `- \`${preset}\``),
-    "",
-    "## Built-In Rules",
+    "## No preset",
     ...expectedPublishedRuleIds().map((rule) => `### ${rule}\n`),
   ].join("\n");
 }
 
 function makeContext(source: string) {
   return {
-    execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
     files: async () => [],
     fix: false,
     glob: async () => [],
@@ -44,7 +42,7 @@ function makeContext(source: string) {
       throw new Error("parseTypescript is not used by this rule.");
     },
     readFile: async (file: string) => {
-      if (file === "apps/docs/content/20-reference/05-rules.md") {
+      if (file === "apps/docs/content/20-reference/100-included-rules.md") {
         return source;
       }
 

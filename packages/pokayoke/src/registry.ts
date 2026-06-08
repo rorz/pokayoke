@@ -22,10 +22,6 @@ export function resolveRuleSettings(
 
   Object.assign(rules, config.rules);
 
-  for (const [name, setting] of Object.entries(config.adapters ?? {})) {
-    rules[`adapter/${name}`] = setting;
-  }
-
   return rules;
 }
 

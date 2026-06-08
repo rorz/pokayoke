@@ -9,13 +9,6 @@ type MaxFileLinesOptions = {
 
 const maxFileLinesId = "structure/max-file-lines";
 const noUnusedSuppressionsId = "suppressions/no-unused";
-const knipAdapterId = "adapter/knip";
-const biomeAdapterId = "adapter/biome";
-
-type AdapterOptions = {
-  command?: string;
-  args?: string[];
-};
 
 export const maxFileLines = defineRule({
   meta: {
@@ -61,39 +54,9 @@ export const noUnusedSuppressions = defineRule({
   run: noFindings,
 });
 
-const knipAdapter = defineRule({
-  meta: {
-    id: knipAdapterId,
-    docs: "Run Knip and surface unused dependency, export, and file findings through pokayoke.",
-    kind: "adapter",
-  },
-  async run(context) {
-    return runAdapter(context, knipAdapterId, {
-      command: "bunx",
-      args: ["knip", "--strict", "--no-progress"],
-    });
-  },
-});
-
-const biomeAdapter = defineRule({
-  meta: {
-    id: biomeAdapterId,
-    docs: "Run Biome and surface formatter, import sorting, and lint findings through pokayoke.",
-    kind: "adapter",
-  },
-  async run(context) {
-    return runAdapter(context, biomeAdapterId, {
-      command: "bunx",
-      args: ["biome", "ci", "."],
-    });
-  },
-});
-
 export const builtinRules = {
   [maxFileLines.meta.id]: maxFileLines,
   [noUnusedSuppressions.meta.id]: noUnusedSuppressions,
-  [knipAdapter.meta.id]: knipAdapter,
-  [biomeAdapter.meta.id]: biomeAdapter,
 };
 
 export const recommended = definePreset({
@@ -103,40 +66,6 @@ export const recommended = definePreset({
     [noUnusedSuppressions.meta.id]: "warn",
   },
 });
-
-async function runAdapter(
-  context: {
-    options: unknown;
-    execAdapter: (
-      command: string,
-      args?: string[],
-    ) => Promise<{ exitCode: number; stdout: string; stderr: string }>;
-  },
-  ruleId: string,
-  defaults: Required<AdapterOptions>,
-) {
-  const options = (context.options ?? {}) as AdapterOptions;
-  const command = options.command ?? defaults.command;
-  const args = options.args ?? defaults.args;
-  const result = await context.execAdapter(command, args);
-
-  if (result.exitCode === 0) {
-    return { findings: [] };
-  }
-
-  const output = [result.stdout.trim(), result.stderr.trim()].filter(Boolean).join("\n\n");
-
-  return {
-    findings: [
-      {
-        ruleId,
-        severity: "error" as const,
-        message: `${command} ${args.join(" ")} exited with code ${result.exitCode}.`,
-        advice: output.slice(0, 2_000),
-      },
-    ],
-  };
-}
 
 function countLines(source: string): number {
   if (source.length === 0) {

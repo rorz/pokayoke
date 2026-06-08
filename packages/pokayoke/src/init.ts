@@ -78,7 +78,6 @@ describe("repo/no-root-source-files", () => {
     await Bun.write(\`\${root}/src/index.ts\`, "export const value = 1;\\n");
 
     const result = await noRootSourceFiles.run({
-      execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
       files: async () => [],
       fix: false,
       glob: async () => ["src/index.ts"],

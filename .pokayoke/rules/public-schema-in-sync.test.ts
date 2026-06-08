@@ -27,7 +27,6 @@ describe("docs/public-schema-in-sync", () => {
 
 function makeContext(actual: string, expected: string) {
   return {
-    execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
     files: async () => [],
     fix: false,
     glob: async () => [],

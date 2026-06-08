@@ -58,7 +58,6 @@ describe("docs/tailwind-entrypoint-only", () => {
 
 function contextWithCss(source: string) {
   return {
-    execAdapter: async () => ({ exitCode: 0, stderr: "", stdout: "" }),
     files: async () => [],
     fix: false,
     glob: async () => [],

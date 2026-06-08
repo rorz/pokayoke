@@ -1,6 +1,6 @@
 ---
 title: pokayoke.jsonc
-description: Config lookup, local rules, ignores, suppressions, adapters, and baselines.
+description: Config lookup, local rules, ignores, suppressions, baselines, and workspaces.
 ---
 
 # Configuration
@@ -166,22 +166,6 @@ debt in rule source.
 
 Baseline entries use `findingKey()` shape: `file:line:column` when location
 exists, or the closest stable key for findings without source locations.
-
-## `adapters`
-
-Adapters run another tool and surface its output through pokayoke.
-
-```jsonc
-{
-  "adapters": {
-    "biome": ["error", { "args": ["biome", "ci", "."] }],
-    "knip": ["warn", { "args": ["knip", "--strict", "--no-progress"] }]
-  }
-}
-```
-
-Use adapters when another tool already owns the analysis. Do not rewrite Knip,
-Biome, or TypeScript as local pokayoke rules.
 
 ## `workspaces`
 

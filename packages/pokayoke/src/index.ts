@@ -69,7 +69,6 @@ export {
   validateSuppressions,
 } from "./suppressions";
 export type {
-  AdapterResult,
   EnabledSeverity,
   Finding,
   NormalizedRuleSetting,

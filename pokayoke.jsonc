@@ -49,20 +49,5 @@
     ],
     "package/no-npx-in-scripts": "error",
     "package/workspace-protocol": ["error", { "protocol": "workspace:*" }]
-  },
-  "adapters": {
-    "biome": ["error", { "args": ["biome", "ci", "."] }],
-    "knip": [
-      "error",
-      {
-        "args": [
-          "knip",
-          "--strict",
-          "--no-progress",
-          "--treat-config-hints-as-errors",
-          "--treat-tag-hints-as-errors"
-        ]
-      }
-    ]
   }
 }

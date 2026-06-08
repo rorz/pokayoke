@@ -30,16 +30,20 @@ Good pokayoke rules usually look like this:
 - "This architectural boundary must not point backwards."
 
 These are not always elegant ESLint rules. Some need the whole repo. Some need
-package metadata. Some need generated artifacts. Some need another tool.
+package metadata. Some need generated artifacts.
 
 pokayoke's job is to turn those conventions into checks that are easy to run,
 hard to misunderstand, and explicit when suppressed.
 
-## Design Goals
+## Design goals
+
+The design goals of pokayoke are to:
+
+- Support the creation of deterministic guardrails
+- Keep one, simple config file, with entirely optional defaults and presets
 
 - Support humans and agents with the same policy layer.
 - Keep project-wide rules first-class.
 - Make findings explain the convention, not just the violation.
 - Keep config readable and reviewable.
 - Prefer warnings for guidance and errors for real forcing functions.
-- Treat adapters as normal rules when another tool already owns the analysis.
