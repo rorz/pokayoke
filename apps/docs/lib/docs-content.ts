@@ -13,7 +13,7 @@ const sectionLabels: Record<string, string> = {
   concepts: "Concepts",
   maintainers: "Maintainers",
   reference: "Reference",
-  start: "Start",
+  guides: "Guides",
 };
 
 const maintenanceSectionKeys = new Set(["maintainers"]);

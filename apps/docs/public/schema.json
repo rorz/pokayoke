@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokayoke.dev/schema.json",
+  "title": "pokayoke config",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "extends": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "localRules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ignores": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "suppressions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "directive": {
+          "type": "string"
+        },
+        "fileLineLimit": {
+          "type": "number"
+        },
+        "requireReason": {
+          "type": "boolean"
+        },
+        "reportUnused": {
+          "$ref": "#/$defs/severity"
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/ruleSetting"
+      }
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["files", "rules"],
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rules": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/ruleSetting"
+            }
+          }
+        }
+      }
+    },
+    "workspaces": {
+      "type": "object"
+    },
+    "adapters": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/ruleSetting"
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "severity": {
+      "enum": ["off", "warn", "error"]
+    },
+    "ruleSetting": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/severity"
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "$ref": "#/$defs/severity"
+            }
+          ],
+          "items": true,
+          "minItems": 1
+        }
+      ]
+    }
+  }
+}

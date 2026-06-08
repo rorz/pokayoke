@@ -16,7 +16,7 @@ export type InitResult = {
 
 const files = {
   "pokayoke.jsonc": `{
-  "$schema": "./node_modules/pokayoke/schema.json",
+  "$schema": "https://pokayoke.dev/schema.json",
   "extends": ["pokayoke/recommended"],
   "localRules": [".pokayoke/rules/**/*.rule.ts"],
   "files": ["AGENTS.md", "SKILL.md", "README.md", "apps/docs/content/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],

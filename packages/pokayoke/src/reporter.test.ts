@@ -26,8 +26,14 @@ describe("formatCheckOutput", () => {
     rulesRun: ["package/no-npx-in-scripts"],
   };
 
-  test("stays quiet for a clean stylish pass by default", () => {
-    expect(formatCheckOutput(passingResult, { color: false, width: 24 })).toBe("");
+  test("renders a compact clean stylish pass by default", () => {
+    expect(formatCheckOutput(passingResult, { color: false, width: 24 })).toBe("pokayoke  PASS\n");
+  });
+
+  test("colors the compact clean pass when color is enabled", () => {
+    expect(formatCheckOutput(passingResult, { color: true, width: 24 })).toBe(
+      "\u001b[30m\u001b[1mpoka\u001b[22m\u001b[39m\u001b[31m\u001b[1myoke\u001b[22m\u001b[39m  \u001b[32mPASS\u001b[39m\n",
+    );
   });
 
   test("renders a clean stylish pass in verbose mode", () => {

@@ -1,9 +1,9 @@
 ---
 title: Why pokayoke
-description: Some exposition on the rationale behind pokayoke's development
+description: Some exposition on the rationale behind pokayoke's development.
 ---
 
-Developers already have good tools for many code quality problems. [ESLint](https://eslint.org/) is good at file-local syntax, style, and code quality. [Biome](https://biomejs.dev) is great for formatting. [Knip](https://knip.dev) is good at project reachability: unused files, dependencies, exports, and binaries. 
+Developers already have good tools for many code quality attributes. [ESLint](https://eslint.org/) is good at file-local syntax, style, and quality. [Biome](https://biomejs.dev) is great for formatting. [Knip](https://knip.dev) is good at managing project clutter and reachability.
 
 However, a large class of more nebulous issues -- **repo conventions** -- often go unmaintained or are not automated because, by virtue of being specific conventions for a repository, they are harder to mold around opinionated tooling. Pokayoke aims to solve this by providing an unopinionated and extensible system for organizing custom repo-specific TypeScript logic.
 

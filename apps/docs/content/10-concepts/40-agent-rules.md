@@ -11,14 +11,15 @@ If an agent reads stale commands, stale examples, or a stale generated catalogue
 it can fail confidently. pokayoke should make those surfaces checkable without
 turning the project into an agent framework.
 
-For step-by-step repo setup, see [Agent setup](/agent-setup).
+For setup and the agent instruction snippet, see
+[Getting Started](/getting-started).
 
 ## What To Check
 
 Useful agent rules usually compare one source of truth with one or more prose
 surfaces:
 
-- `SKILL.md` setup and rule-authoring instructions to the current CLI and API.
+- `SKILL.md` setup and rule design instructions to the current CLI and API.
 - CLI contract to agent skill examples.
 - API contract to documentation tables.
 - Generated operation catalogue to the live operation registry.

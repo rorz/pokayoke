@@ -1,5 +1,7 @@
 import {
   ArrowRight,
+  Check,
+  Copy,
   GithubLogo,
   Package,
   ShieldCheck,
@@ -7,6 +9,7 @@ import {
 } from "@phosphor-icons/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 
 import { PokayokeWordmark } from "../components/brand-assets";
 import { DocsFooter } from "../components/docs-footer";
@@ -41,7 +44,50 @@ const statusBadges = [
   },
 ];
 
+const installCommand = "bunx skills add rorz/pokayoke";
+
+const copyTextWithSelection = (text: string) => {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.left = "-9999px";
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+
+  document.body.append(textarea);
+  textarea.select();
+  const didCopy = document.execCommand("copy");
+  textarea.remove();
+
+  return didCopy;
+};
+
 export default function HomePage() {
+  const [copiedInstallCommand, setCopiedInstallCommand] = useState(false);
+
+  const copyInstallCommand = async () => {
+    let didCopy = false;
+
+    try {
+      const writeText = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+
+      if (writeText) {
+        await writeText(installCommand);
+        didCopy = true;
+      } else {
+        didCopy = copyTextWithSelection(installCommand);
+      }
+    } catch {
+      didCopy = copyTextWithSelection(installCommand);
+    }
+
+    setCopiedInstallCommand(didCopy);
+
+    if (didCopy) {
+      window.setTimeout(() => setCopiedInstallCommand(false), 1600);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -61,58 +107,130 @@ export default function HomePage() {
             <div className="mx-auto grid min-h-[80vh] max-w-[1440px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-16">
               <div className="order-2 max-w-[860px] lg:order-1">
                 <div className="flex items-center gap-2">
-
-                <span className="text-2xl text-neutral-600">ポカ<span className="text-red-400">ヨケ</span></span><span>•</span><span className="font-light text-neutral-400 tracking-widest text-xl">/ˈpoʊ.kɑː <span className="text-red-300">ˈjoʊ.keɪ</span>/</span>
+                  <span className="text-2xl text-neutral-600">
+                    ポカ<span className="text-red-400">ヨケ</span>
+                  </span>
+                  <span>•</span>
+                  <span className="font-light text-neutral-400 tracking-widest text-xl">
+                    /ˈpoʊ.kɑː <span className="text-red-300">ˈjoʊ.keɪ</span>/
+                  </span>
                 </div>
                 <h1 className="m-0 max-w-[820px]" aria-label="pokayoke">
                   <PokayokeWordmark className="text-[54px] leading-[0.98] sm:text-[76px] lg:text-[92px]" />
                 </h1>
                 <p className="mt-6 max-w-[640px] text-[18px] text-neutral-600 leading-8 sm:text-[20px]">
-                  Turn your repo conventions into checks that humans and
-                  agents can run, understand, and repair. Designed to work harmoniously alongside your existing code analysis, linting, and formatting toolchains.
+                  Turn your repo conventions into checks that humans and agents can run, understand,
+                  and repair. Designed to work harmoniously alongside your existing code analysis,
+                  linting, and formatting toolchains.
                 </p>
-
-                <div className="mt-8 flex flex-wrap gap-2" aria-label="Project status">
-                  {statusBadges.map((badge) => (
-                    <a
-                      className="inline-flex h-[22px] items-center overflow-hidden border border-neutral-200 bg-white transition-opacity hover:opacity-80"
-                      href={badge.href}
-                      key={badge.label}
-                      target="_blank"
-                    >
-                      <img alt={badge.label} className="h-[20px] w-auto" src={badge.src} />
-                    </a>
-                  ))}
-                </div>
 
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                   <Link
                     className="inline-flex h-10 items-center justify-center gap-2 border border-neutral-950 bg-neutral-950 px-4 font-medium text-[14px] text-white hover:bg-neutral-800"
-                    href="/overview"
+                    href="/getting-started"
                   >
                     Read the docs
-                    <ArrowRight aria-hidden="true" className="text-red-500" size={16} weight="duotone" />
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="text-red-500"
+                      size={16}
+                      weight="duotone"
+                    />
                   </Link>
                   <a
                     className="inline-flex h-10 items-center justify-center gap-2 border border-neutral-300 px-4 font-medium text-[14px] text-neutral-800 hover:border-neutral-950 hover:text-neutral-950"
                     href="https://github.com/rorz/pokayoke"
                     target="_blank"
+                    rel="noopener"
                   >
-                    <GithubLogo aria-hidden="true" className="text-red-500" size={17} weight="duotone" />
+                    <GithubLogo
+                      aria-hidden="true"
+                      className="text-red-500"
+                      size={17}
+                      weight="duotone"
+                    />
                     GitHub
                   </a>
                   <a
                     className="inline-flex h-10 items-center justify-center gap-2 border border-neutral-300 px-4 font-medium text-[14px] text-neutral-800 hover:border-neutral-950 hover:text-neutral-950"
                     href="https://www.npmjs.com/package/pokayoke"
                     target="_blank"
+                    rel="noopener"
                   >
-                    <Package aria-hidden="true" className="text-red-500" size={17} weight="duotone" />
+                    <Package
+                      aria-hidden="true"
+                      className="text-red-500"
+                      size={17}
+                      weight="duotone"
+                    />
                     npm
                   </a>
                 </div>
+
+                <div className="mt-8 w-full max-w-[460px]">
+                  <p className="m-0 mb-2 font-semibold text-[12px] text-neutral-500 uppercase leading-5">
+                    Get started now
+                  </p>
+                  <button
+                    aria-label={
+                      copiedInstallCommand ? "Copied install command" : "Copy install command"
+                    }
+                    className="group flex min-h-11 w-full items-center justify-between gap-3 border border-neutral-200 bg-neutral-50 px-3 py-2 text-left transition-colors hover:border-neutral-950 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                    onClick={copyInstallCommand}
+                    type="button"
+                  >
+                    <code className="break-all font-mono text-[13px] text-neutral-950 leading-5 sm:whitespace-nowrap">
+                      {installCommand}
+                    </code>
+                    <span className="inline-flex h-7 shrink-0 items-center gap-1 border border-neutral-200 bg-white px-2 font-medium text-[12px] text-neutral-500 transition-colors group-hover:text-neutral-950">
+                      {copiedInstallCommand ? (
+                        <Check
+                          aria-hidden="true"
+                          className="text-red-500"
+                          size={14}
+                          weight="bold"
+                        />
+                      ) : (
+                        <Copy
+                          aria-hidden="true"
+                          className="text-red-500"
+                          size={14}
+                          weight="duotone"
+                        />
+                      )}
+                      {copiedInstallCommand ? "Copied" : "Copy"}
+                    </span>
+                  </button>
+                  <p className="mt-2 mb-0 text-[13px] text-neutral-500 leading-6">
+                    or{" "}
+                    <Link
+                      className="font-medium text-neutral-800 underline decoration-red-300 underline-offset-4 hover:text-neutral-950"
+                      href="/getting-started"
+                    >
+                      read the human instructions
+                    </Link>
+                  </p>
+                </div>
+
+                <div className="mt-18 flex flex-wrap gap-2" aria-label="Project status">
+                  {statusBadges.map((badge) => (
+                    <a
+                      className="inline-flex h-[22px] items-center overflow-hidden border border-neutral-200 bg-white transition-opacity hover:opacity-80"
+                      href={badge.href}
+                      key={badge.label}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      <img alt={badge.label} className="h-[20px] w-auto" src={badge.src} />
+                    </a>
+                  ))}
+                </div>
               </div>
 
-              <div className="order-1 flex items-center lg:order-2 lg:justify-end" aria-hidden="true">
+              <div
+                className="order-1 flex items-center lg:order-2 lg:justify-end"
+                aria-hidden="true"
+              >
                 <HomeAppIcon compact />
                 <HomeAppIcon />
               </div>
@@ -120,36 +238,48 @@ export default function HomePage() {
           </section>
 
           <section className="mx-auto grid max-w-[1440px] gap-4 px-4 py-8 sm:px-6 lg:grid-cols-3 lg:px-8">
-            <Link
-              className="group border border-neutral-200 p-5 hover:border-neutral-950"
-              href="/configuration"
-            >
-              <ShieldCheck aria-hidden="true" className="mb-7 text-red-500" size={24} weight="duotone" />
-              <h2 className="m-0 font-semibold text-[17px] leading-6">Configuration</h2>
+            <article className="border border-neutral-200 p-5">
+              <TerminalWindow
+                aria-hidden="true"
+                className="mb-7 text-red-500"
+                size={24}
+                weight="duotone"
+              />
+              <h2 className="m-0 font-semibold text-[17px] leading-6">Fast setup</h2>
               <p className="mt-2 mb-0 text-[14px] text-neutral-600 leading-6">
-                Root config, local rules, ignores, suppressions, and presets.
+                Install the `pokayoke` package with minimal configuration, and add it to your
+                existing code-checking workflow easily.
               </p>
-            </Link>
-            <Link
-              className="group border border-neutral-200 p-5 hover:border-neutral-950"
-              href="/rule-authoring"
-            >
-              <TerminalWindow aria-hidden="true" className="mb-7 text-red-500" size={24} weight="duotone" />
-              <h2 className="m-0 font-semibold text-[17px] leading-6">Rule authoring</h2>
+            </article>
+            <article className="border border-neutral-200 p-5">
+              <ShieldCheck
+                aria-hidden="true"
+                className="mb-7 text-red-500"
+                size={24}
+                weight="duotone"
+              />
+              <h2 className="m-0 font-semibold text-[17px] leading-6">Agent-first</h2>
               <p className="mt-2 mb-0 text-[14px] text-neutral-600 leading-6">
-                Rule kinds, context helpers, fixtures, and implementation shape.
+                Use the pokayoke agent `SKILL.md` to get started autonomously. The rules that
+                pokayoke uses are designed to be written and maintained by agents.
               </p>
-            </Link>
-            <Link
-              className="group border border-neutral-200 p-5 hover:border-neutral-950"
-              href="/agent-setup"
-            >
-              <Package aria-hidden="true" className="mb-7 text-red-500" size={24} weight="duotone" />
-              <h2 className="m-0 font-semibold text-[17px] leading-6">Agent setup</h2>
+            </article>
+            <article className="border border-neutral-200 p-5">
+              <Package
+                aria-hidden="true"
+                className="mb-7 text-red-500"
+                size={24}
+                weight="duotone"
+              />
+              <h2 className="m-0 font-semibold text-[17px] leading-6">
+                Unopinionated and extensible
+              </h2>
               <p className="mt-2 mb-0 text-[14px] text-neutral-600 leading-6">
-                Install pokayoke, add scripts, register local rules, and hand off cleanly.
+                Pokayoke sits alongside your existing linters, formatters, and analysis tooling.
+                Local pokayoke TypeScript rules check against project invariants specific to your
+                repo.
               </p>
-            </Link>
+            </article>
           </section>
         </main>
         <DocsFooter />

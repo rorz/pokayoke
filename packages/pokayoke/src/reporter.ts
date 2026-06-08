@@ -12,9 +12,19 @@ type CheckOutputOptions = ReporterOptions & {
   verbose?: boolean;
 };
 
-type ColorName = "blue" | "bold" | "cyan" | "dim" | "green" | "magenta" | "red" | "yellow";
+type ColorName =
+  | "black"
+  | "blue"
+  | "bold"
+  | "cyan"
+  | "dim"
+  | "green"
+  | "magenta"
+  | "red"
+  | "yellow";
 
 const codes: Record<ColorName, [number, number]> = {
+  black: [30, 39],
   blue: [34, 39],
   bold: [1, 22],
   cyan: [36, 39],
@@ -31,10 +41,16 @@ export function formatCheckOutput(result: CheckResult, options: CheckOutputOptio
   }
 
   if (!options.verbose && result.findings.length === 0) {
-    return "";
+    return formatCompactPass(options);
   }
 
   return formatStylish(result, options);
+}
+
+function formatCompactPass(options: ReporterOptions = {}): string {
+  const color = options.color ?? shouldUseColor();
+  const paint = (name: ColorName, value: string) => formatColor(name, value, color);
+  return `${paint("black", paint("bold", "poka"))}${paint("red", paint("bold", "yoke"))}  ${paint("green", "PASS")}\n`;
 }
 
 export function formatStylish(result: CheckResult, options: ReporterOptions = {}): string {

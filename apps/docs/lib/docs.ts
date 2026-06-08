@@ -106,7 +106,7 @@ export function slugFromRouteParam(slug: string[] | string | undefined): string 
     return slug.join("/");
   }
 
-  return "overview";
+  return "getting-started";
 }
 
 export function slugify(value: string): string {
