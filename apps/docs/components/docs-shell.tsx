@@ -80,11 +80,11 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
           ) : null}
 
           <main className="min-w-0 lg:col-start-2">
-            <div className="mb-3 font-medium text-neutral-500 text-xs font-stretch-expanded">{current.section}</div>
-            <h1 className="m-0 max-w-[760px] font-semibold text-3xl leading-[1.08] tracking-normal sm:text-[40px] text-red-500">
+            <div className="mb-3 font-medium text-neutral-500 uppercase text-xs">{current.section}</div>
+            <h1 className="m-0 max-w-[760px] font-semibold text-3xl leading-[1.08] tracking-normal sm:text-[40px] text-red-500 font-stretch-semi-expanded">
               {current.title}
             </h1>
-            <p className="mt-2 mb-8 max-w-[680px] font-medium text-neutral-500 leading-7">
+            <p className="mt-2 mb-8 max-w-[680px] font-normal text-neutral-500 leading-7">
               {current.description}
             </p>
             {children}

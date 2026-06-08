@@ -8,9 +8,10 @@ import {
 import Head from "next/head";
 import Link from "next/link";
 
-import { PokayokeIcon, PokayokeWordmark } from "../components/brand-assets";
+import { PokayokeWordmark } from "../components/brand-assets";
 import { DocsFooter } from "../components/docs-footer";
 import { DocsTopbar } from "../components/docs-topbar";
+import { HomeAppIcon } from "../components/home-app-icon";
 
 const statusBadges = [
   {
@@ -59,7 +60,10 @@ export default function HomePage() {
           <section className="border-neutral-200 border-b">
             <div className="mx-auto grid min-h-[80vh] max-w-[1440px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 lg:py-16">
               <div className="order-2 max-w-[860px] lg:order-1">
-                <span className="text-2xl text-neutral-600">ポカ<span className="text-red-400">ヨケ</span></span>
+                <div className="flex items-center gap-2">
+
+                <span className="text-2xl text-neutral-600">ポカ<span className="text-red-400">ヨケ</span></span><span>•</span><span className="font-light text-neutral-400 tracking-widest text-xl">/ˈpoʊ.kɑː <span className="text-red-300">ˈjoʊ.keɪ</span>/</span>
+                </div>
                 <h1 className="m-0 max-w-[820px]" aria-label="pokayoke">
                   <PokayokeWordmark className="text-[54px] leading-[0.98] sm:text-[76px] lg:text-[92px]" />
                 </h1>
@@ -109,16 +113,8 @@ export default function HomePage() {
               </div>
 
               <div className="order-1 flex items-center lg:order-2 lg:justify-end" aria-hidden="true">
-                <div className="grid size-24 place-items-center rounded-[18px] border border-neutral-300 bg-neutral-50 shadow-sm sm:size-28 sm:rounded-[20px] lg:hidden">
-                  <PokayokeIcon className="size-[72%]" />
-                </div>
-                <div className="relative hidden size-[380px] items-center justify-center lg:flex [perspective:900px]">
-                  <div className="absolute bottom-7 left-1/2 h-5 w-[68%] -translate-x-1/2 rounded-full bg-neutral-300/70 blur-[1px]" />
-                  <div className="absolute bottom-13 left-1/2 h-12 w-[74%] -translate-x-1/2 rounded-b-[32px] border border-neutral-300 bg-neutral-200 shadow-[0_10px_18px_rgb(0_0_0_/_0.12)] [transform:rotateX(68deg)]" />
-                  <div className="relative grid size-[340px] place-items-center rounded-[34px] border border-neutral-300 bg-neutral-50 shadow-[0_30px_70px_rgb(0_0_0_/_0.15),inset_0_1px_0_rgb(255_255_255_/_0.9),inset_0_-28px_52px_rgb(0_0_0_/_0.06)] [transform:rotateX(8deg)_rotateY(-8deg)_rotateZ(1deg)] [transform-style:preserve-3d]">
-                    <PokayokeIcon className="size-[72%] drop-shadow-[0_12px_12px_rgb(0_0_0_/_0.16)] lg:drop-shadow-[0_18px_18px_rgb(0_0_0_/_0.16)]" />
-                  </div>
-                </div>
+                <HomeAppIcon compact />
+                <HomeAppIcon />
               </div>
             </div>
           </section>

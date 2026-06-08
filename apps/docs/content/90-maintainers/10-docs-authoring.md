@@ -22,3 +22,13 @@ Supported callout types are `NOTE`, `TIP`, `IMPORTANT`, `WARNING`, and
 
 The Markdoc `{% callout %}` tag remains available when a page needs a custom
 title.
+
+## Tailwind CSS
+
+Keep `apps/docs/styles/tailwind.css` as the docs app Tailwind entrypoint. It may
+contain Tailwind directives such as `@import`, `@source`, `@theme`, and
+`@utility`, but component styling belongs in Tailwind utility classes beside the
+JSX that renders it.
+
+The `docs/tailwind-entrypoint-only` local rule rejects ordinary selector blocks
+in that CSS file.

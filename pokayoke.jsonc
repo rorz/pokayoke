@@ -36,6 +36,7 @@
   "rules": {
     "agents/instructions-in-sync": "error",
     "docs/canonical-source": "error",
+    "docs/tailwind-entrypoint-only": "error",
     "repo/no-root-source-files": "error",
     "structure/max-file-lines": [
       "error",
