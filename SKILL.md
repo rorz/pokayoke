@@ -12,17 +12,18 @@ project-specific TypeScript conventions.
 
 ## Setup Workflow
 
-1. Prefer Bun commands in Bun repos.
-2. Install the package with the repo's package manager.
+1. Prefer Bun commands. pokayoke is Bun-first and ships TypeScript source.
+2. Install with the repo's package manager.
 3. Run `pokayoke init`.
 4. Add `pokayoke check` to the existing verification script.
-5. Keep repo-specific rules in `.pokayoke/rules`.
-6. Run the repo's full check before handing work back.
+5. Keep repo-owned rules in `.pokayoke/rules/**/*.rule.ts`.
+6. Add focused tests beside local rules.
+7. Run the repo's full check before handing work back.
 
 For Bun:
 
 ```sh
-bun add -d pokayoke
+bun add --save-dev pokayoke
 bun run pokayoke init
 bun run pokayoke check
 ```
@@ -30,9 +31,22 @@ bun run pokayoke check
 Do not replace existing typecheck, test, format, or dependency checks. Append
 pokayoke to the gate.
 
+Useful CLI forms: `pokayoke`, `pokayoke init --force`, `pokayoke check`,
+`pokayoke check <rule-id>`, `pokayoke check --fix`,
+`pokayoke check --format json`, and `pokayoke check --verbose`.
+
+In this repository, prefer the source-backed scripts:
+
+```sh
+bun run dogfood
+bun run dogfood --fix
+bun run check
+```
+
 ## Local Rule Shape
 
-Use `pokayoke.jsonc` as the human-facing policy surface:
+Use `pokayoke.jsonc` as the root policy surface. It is the only config file
+pokayoke currently loads.
 
 ```jsonc
 {
@@ -45,9 +59,11 @@ Use `pokayoke.jsonc` as the human-facing policy surface:
 }
 ```
 
-Keep repo-specific rule code in `.pokayoke/rules`. Treat `.pokayoke` as
-agent-maintained but human-reviewable: agents can scaffold and revise it, and
-humans should still review it like any other policy code.
+Config supports `extends`, `localRules`, `files`, `ignores`, `suppressions`,
+`rules`, `baseline`, and `workspaces`. Keep repo-specific rule code in
+`.pokayoke/rules`. Treat `.pokayoke` as agent-maintained but human-reviewable:
+agents can scaffold and revise it, and humans should still review it like any
+other policy code.
 
 ```ts
 import type { Rule } from "pokayoke";
@@ -60,17 +76,16 @@ export const noRootSourceFiles: Rule = {
   },
   async run(context) {
     const findings = [];
+    const rootSourceFiles = await context.glob(["src/**/*.ts", "src/**/*.tsx"]);
 
-    for (const file of await context.files()) {
-      if (file.startsWith("src/")) {
-        findings.push({
-          ruleId: "repo/no-root-source-files",
-          severity: "error" as const,
-          message: "Root source files are not allowed.",
-          file,
-          advice: "Move source into a package.",
-        });
-      }
+    for (const file of rootSourceFiles) {
+      findings.push({
+        ruleId: "repo/no-root-source-files",
+        severity: "error" as const,
+        message: "Root source files are not allowed in this workspace.",
+        file,
+        advice: "Move source code into a package or app.",
+      });
     }
 
     return { findings };
@@ -83,13 +98,41 @@ export const noRootSourceFiles: Rule = {
 - `file`: source-pattern or AST checks.
 - `project`: whole-repo checks, generated artifacts, workspace policy, docs.
 
-Use built-in helpers from `pokayoke` for common rule work:
+Use context methods for rule work:
 
+- `context.files()` for configured files after ignores.
+- `context.glob(patterns)` for repo-relative discovery outside `files`.
+- `context.readFile(file)` for cached file reads.
 - `context.parseTypescript(file)` for cached TypeScript AST parsing.
-- `context.glob(patterns)` for repo-relative file discovery outside `files`.
+- `context.packageJson(workspace)` and `context.workspaces()` for package
+  metadata.
+- `context.report(finding)` for incremental findings.
+
+Use imports from `pokayoke` for common helpers:
+
+- `defineRule()`, `definePlugin()`, and `definePreset()` for reusable rule
+  packages.
 - `checkGeneratedText()` and `syncGeneratedText()` for generated artifacts.
-- `locate()`, `lineAt()`, and `previousLine()` for source locations.
+- `locate()`, `lineAt()`, `previousLine()`, and `countLines()` for source
+  locations and line counts.
 - `findingKey()` for baseline entries.
+
+## Bundled Presets
+
+Current bundled presets:
+
+- `pokayoke/recommended`: `structure/max-file-lines`,
+  `suppressions/no-unused`.
+- `pokayoke/typescript/recommended`: `typescript/no-forward-reference`,
+  `typescript/no-optional-env`, `typescript/no-swallowed-errors`.
+- `pokayoke/package-policy/bun-workspaces`: `package/catalog`,
+  `package/workspace-protocol`, `package/no-npx-in-scripts`.
+- `pokayoke/patterns/recommended`: empty today, with pattern rules available
+  for explicit opt-in.
+
+Other bundled rules include `typescript/enforce-arrow-function`,
+`patterns/file-must-match`, `patterns/no-banned-text`, and
+`patterns/required-text`.
 
 ## Drift Rules
 
@@ -114,27 +157,19 @@ if (context.fix) {
 }
 
 return {
-  findings: checkGeneratedText({
-    actual,
-    expected,
-    file: "apps/docs/content/catalogue.md",
-    ruleId: "agents/catalogue-in-sync",
-    syncCommand: "pokayoke check --fix",
-  }),
+  findings: checkGeneratedText({ actual, expected, file, ruleId, syncCommand }),
 };
 ```
 
 ## Suppressions
 
-Suppressions must be local and justified:
+Suppressions must be local and justified. They can apply to the same line,
+previous line, or a whole file near the top of the file:
 
 ```ts
-// pokayoke-ignore: typescript/no-forward-reference -- mutual recursion is intentional
-```
-
-Use file-level suppressions only near the top of a file:
-
-```ts
+const value = later(); // pokayoke-ignore: typescript/no-forward-reference -- reads better below
+// pokayoke-ignore: patterns/no-banned-text -- fixture intentionally contains this phrase
+const fixture = "deprecated command";
 // pokayoke-ignore-file: structure/max-file-lines -- generated compatibility shim
 ```
 
@@ -143,44 +178,40 @@ existing violations need to be grandfathered.
 
 ## Testing Rules
 
-Every local rule should have a small test. Use direct `bun:test` cases for
-simple project rules, or `pokayoke/fixture-testing` when good/bad fixture files
-make the convention clearer.
+Every local rule should have a small test. Use direct `bun:test` for simple
+project rules, or `pokayoke/fixture-testing` when good/bad fixture files make
+the convention clearer.
 
 ```ts
 import { testRuleFixtures } from "pokayoke/fixture-testing";
-
 import { noForbiddenCommand } from "./no-forbidden-command";
-
-testRuleFixtures({
-  rule: noForbiddenCommand,
-  root: import.meta.dir,
-  good: `${import.meta.dir}/fixtures/good`,
-  bad: `${import.meta.dir}/fixtures/bad`,
-});
+testRuleFixtures({ rule: noForbiddenCommand, root: import.meta.dir, good, bad });
 ```
 
 ## Publishing
 
 Use the repository publishing workflow instead of ad hoc npm commands. Read
-`apps/docs/content/publishing.md`, run `bun run pack:dry-run`, and publish through
-`.github/workflows/publish.yml`.
+`apps/docs/content/90-maintainers/00-publishing.md`, run
+`bun run publish:check`, and publish through `.github/workflows/publish.yml`.
 
 ## Documentation Source
 
-For this repository, the docs site is the canonical source of truth. Keep
-long-form project documentation in `apps/docs/content/*.md`, exposed as
-root-level docs routes. Keep README as a short doorway, and update docs content
-in the same change as architecture, tooling, policy, publishing, or workflow
-changes.
+For this repository, [pokayoke.codes](https://pokayoke.codes) is the canonical
+docs site. Keep long-form docs in `apps/docs/content/**/*.md`, exposed through
+routes such as `/configuration`, `/rule-design`, `/suppressions`,
+`/included-rules`, and `/maintenance/publishing`. Keep README as a short
+doorway, and update docs content with architecture, tooling, policy,
+publishing, or workflow changes.
 
 ## Handoff
 
 Before finishing pokayoke work:
 
 - run `bun run check` when available
-- run `bun run pokayoke check` or the repo's equivalent
+- run `bun run dogfood` or the repo's equivalent
 - verify `pokayoke.jsonc` loads
 - verify local rules have tests
 - verify agent-facing docs have a declared source of truth
+- verify generated docs or public assets are fixed with `bun run dogfood --fix`
+  when a deterministic sync rule reports drift
 - report any rule that is intentionally planned but not implemented

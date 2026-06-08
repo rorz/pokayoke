@@ -5,6 +5,9 @@
 [![GitHub](https://img.shields.io/github/stars/rorz/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke)
 [![license](https://img.shields.io/npm/l/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke/blob/main/LICENSE)
 
+> **Docs:** [pokayoke.codes](https://pokayoke.codes) is the canonical guide for
+> setup, configuration, rule design, suppressions, and publishing.
+
 repo-policy tooling for convention checks that humans and agents can both run.
 
 ```sh
@@ -16,5 +19,3 @@ bun run pokayoke check
 pokayoke is intentionally shipped as TypeScript source for Bun. It does not
 bundle repo-specific rules; repo-local policy lives in `pokayoke.jsonc` and
 agent-maintained rule code lives in `.pokayoke/rules`.
-
-The canonical project docs live at [pokayoke.codes](https://pokayoke.codes).

@@ -11,6 +11,9 @@
 [![GitHub](https://img.shields.io/github/stars/rorz/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke)
 [![license](https://img.shields.io/npm/l/pokayoke?style=flat-square)](https://github.com/rorz/pokayoke/blob/main/LICENSE)
 
+> **Docs:** [pokayoke.codes](https://pokayoke.codes) is the canonical guide for
+> setup, configuration, rule design, suppressions, and publishing.
+
 pokayoke is repo-policy tooling for checks that sit between normal linting and
 project reachability.
 

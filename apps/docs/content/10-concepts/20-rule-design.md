@@ -1,6 +1,6 @@
 ---
 title: Rule design
-description: Rule kinds, implementation shape, findings, helpers, tests, and fix mode.
+description: Rule kinds, implementation shape, findings, helpers, tests, drift checks, and fix mode.
 ---
 
 # Rule Design
@@ -134,16 +134,11 @@ surface.
 
 ## AST Checks
 
-Use `context.parseTypescript(file)` when string matching would be brittle.
-The parser result is cached per file during a check run.
-
-```ts
-const sourceFile = await context.parseTypescript(file);
-```
-
-Use AST checks for TypeScript-specific policy such as function declaration
-style, optional environment values, swallowed errors, forbidden imports, or
-architectural boundaries.
+Use `context.parseTypescript(file)` when string matching would be brittle. The
+parser result is cached per file during a check run. Use AST checks for
+TypeScript-specific policy such as function declaration style, optional
+environment values, swallowed errors, forbidden imports, or architectural
+boundaries.
 
 ## Generated Drift
 
@@ -171,6 +166,14 @@ return {
 
 Only write in fix mode when the repair is deterministic. If a human needs to
 choose the wording or architecture, report a finding instead.
+
+## Agent-Facing Drift
+
+Agent-facing instructions are still repo contracts. Treat `AGENTS.md`,
+`SKILL.md`, generated catalogues, and tool-specific rules files as prose drift
+surfaces that should match live commands, APIs, registries, mirrored
+instructions, and package policy. Keep these checks local unless the policy is
+generally useful; core should not encode one project's private agent workflow.
 
 ## Findings
 

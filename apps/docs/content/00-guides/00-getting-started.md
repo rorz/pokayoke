@@ -81,7 +81,7 @@ In your `package.json` file:
 }
 ```
 
-### Optional: Add pokayoke to agent rules
+### Optional: Add pokayoke to assistant instructions
 
 If you're using a coding assistant, add a reference to pokayoke in your `AGENTS.md` or your tool's rules folder.
 
