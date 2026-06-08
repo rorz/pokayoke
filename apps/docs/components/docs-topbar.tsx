@@ -26,9 +26,10 @@ export function DocsTopbar({ onOpenSidebar }: DocsTopbarProps) {
         <Link className="inline-flex h-8 items-center" href="/" aria-label="pokayoke docs home">
           <PokayokeLogo aria-hidden="true" className="h-8 w-auto" />
         </Link>
-        <span className="-ml-1 border-neutral-200 border-l pl-2 font-mono text-[11px] text-neutral-400 leading-none">
+        <span className="-ml-1 border-neutral-200 border-l pl-2 font-mono text-xs text-neutral-400 leading-none">
           v{pokayokePackage.version}
         </span>
+        <span className="text-xs bg-red-300 text-white px-2 py-0.5 rounded-md">alpha</span>
         <nav className="ml-auto flex items-center gap-1 text-xs" aria-label="Project links">
           <a
             className="inline-flex h-8 items-center gap-1.5 px-2 font-medium text-neutral-600 hover:text-neutral-950"

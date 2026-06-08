@@ -5,34 +5,6 @@ import { useState } from "react";
 import { PokayokeWordmark } from "./brand-assets";
 import { HomeAppIcon } from "./home-app-icon";
 
-const statusBadges = [
-  {
-    label: "npm version",
-    href: "https://www.npmjs.com/package/pokayoke",
-    src: "https://img.shields.io/npm/v/pokayoke?style=flat-square&label=npm",
-  },
-  // {
-  //   label: "monthly npm downloads",
-  //   href: "https://www.npmjs.com/package/pokayoke",
-  //   src: "https://img.shields.io/npm/dm/pokayoke?style=flat-square&label=downloads",
-  // },
-  // {
-  //   label: "GitHub release",
-  //   href: "https://github.com/rorz/pokayoke/releases",
-  //   src: "https://img.shields.io/github/v/release/rorz/pokayoke?style=flat-square&label=release",
-  // },
-  // {
-  //   label: "publish workflow",
-  //   href: "https://github.com/rorz/pokayoke/actions/workflows/publish.yml",
-  //   src: "https://img.shields.io/github/actions/workflow/status/rorz/pokayoke/publish.yml?branch=main&style=flat-square&label=publish",
-  // },
-  {
-    label: "license",
-    href: "https://github.com/rorz/pokayoke/blob/main/LICENSE",
-    src: "https://img.shields.io/npm/l/pokayoke?style=flat-square",
-  },
-];
-
 const installCommand = "bunx skills add rorz/pokayoke";
 
 const copyTextWithSelection = (text: string) => {
@@ -160,21 +132,6 @@ export function HomeHero() {
               </Link>
             </p>
           </div>
-
-          <nav className="mt-18 flex flex-wrap gap-2" aria-label="Project status">
-            {statusBadges.map((badge) => (
-              <a
-                className="inline-flex h-[22px] items-center overflow-hidden border border-neutral-200 bg-white transition-opacity hover:opacity-80"
-                href={badge.href}
-                key={badge.label}
-                target="_blank"
-                rel="noopener"
-              >
-                {/* biome-ignore lint/performance/noImgElement: Shields.io badges are tiny remote status images outside the docs image pipeline. */}
-                <img alt={badge.label} className="h-[20px] w-auto" src={badge.src} />
-              </a>
-            ))}
-          </nav>
         </div>
 
         <div className="order-1 flex items-center lg:order-2 lg:justify-end" aria-hidden="true">

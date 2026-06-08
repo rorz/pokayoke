@@ -5,16 +5,19 @@ description: Set pokayoke up in minutes.
 
 # Getting Started
 
-pokayoke turns repo conventions into checks that humans and agents can both
-run.
+You can try pokayoke out in an existing codebase easily. Run setup autonomously with the agent `SKILL.md`, or run a few commands manually.
 
-{% callout title="Bun is required" tone="warning" %}
-pokayoke currently targets projects that use, or can run, the `bun` runtime.
+{% callout title="pokayoke is in alpha" tone="caution" %}
+As pokayoke is currently in an experimental state, things might change in unexpected or fundamental ways in the near future. I'll do my best to reduce breaking changes!
 {% /callout %}
 
-## Agent-First
+{% callout title="Bun is required" tone="warning" %}
+Pokayoke currently targets projects that use, or can run, the `bun` runtime.
+{% /callout %}
 
-Install the Codex skill:
+## Agent-first
+
+Install the agent skill:
 
 ```sh
 bunx skills add rorz/pokayoke
@@ -42,33 +45,9 @@ Use the pokayoke skill. Check that CLAUDE.md mirrors AGENTS.md. If it drifts,
 report the mirror file and tell the agent to update it from AGENTS.md.
 ```
 
-## Add Pokayoke To Agent Rules
+## Human setup
 
-Add a short reference to `AGENTS.md`, `CLAUDE.md`, or your tool's rules folder
-so agents know where the policy lives:
-
-```md
-This repository uses pokayoke for deterministic repo policy checks.
-
-- Config lives in `pokayoke.jsonc`.
-- Local rules live in `.pokayoke/rules/**/*.rule.ts`.
-- When changing docs, commands, package policy, generated artifacts, or agent
-  instructions, update the matching pokayoke rule or add one.
-- Read `/configuration` for config and `/rule-design` for rule examples.
-- Run `bun run pokayoke check` or the repo's normal `check` script before
-  handoff.
-```
-
-Do not point agents at `node_modules` for reference docs. Link them to the docs
-site routes or to the repo's own docs source files.
-
-Before an agent hands work back, it should run local rule tests, run
-`bun run pokayoke check`, run the repo's normal `check` script, and mention any
-rules that are planned but not implemented.
-
-## Human Setup
-
-Run these commands from the repository root:
+Run these commands from the root of your codebase:
 
 ```sh
 bun add --save-dev pokayoke
@@ -82,16 +61,14 @@ bun run pokayoke check
 pokayoke.jsonc
 .pokayoke/
   rules/
-    no-root-source-files.rule.ts
-    no-root-source-files.test.ts
+    *.rule.ts
+    *.test.ts
 ```
 
-Existing files are skipped. Use `pokayoke init --force` only when you intend to
-regenerate the starter policy files.
 
-## Add It To Checks
+### Append pokayoke to your checks scripting
 
-Append pokayoke to the existing check gate:
+In your `package.json` file:
 
 ```json
 {
@@ -104,18 +81,31 @@ Append pokayoke to the existing check gate:
 }
 ```
 
-Keep existing type checks, tests, formatting, and dependency checks.
+### Optional: Add pokayoke to agent rules
 
-## Better Starter Rules
+If you're using a coding assistant, add a reference to pokayoke in your `AGENTS.md` or your tool's rules folder.
 
-Start with rules that compare one repo contract with one checkable surface:
+```md
+This repository uses pokayoke for deterministic repo policy checks.
 
-- Package scripts must use `bunx` instead of `npx`.
-- Internal workspace dependencies must use `workspace:*`.
-- Generated docs must match their source files.
-- Agent instruction files must mirror `AGENTS.md`.
-- Markdown command examples must reference scripts that still exist.
-- Environment schema files must require values instead of making them optional.
+- Config lives in `pokayoke.jsonc`.
+- Local rules live in `.pokayoke/rules/**/*.rule.ts`.
+- When changing docs, commands, package policy, generated artifacts, or agent
+  instructions, update the matching pokayoke rule or add one.
+- Read `/configuration` for config and `/rule-design` for rule examples.
+- Run `bun run pokayoke check` or the repo's normal `check` script before
+  handoff.
+```
 
-Read [Configuration](/configuration) for `pokayoke.jsonc`, [Rules](/rules)
-for published rule IDs, and [Rule Design](/rule-design) for local rule shape.
+## Writing rules
+
+Pokayoke is designed to be unopinionated, and you should ask your coding assistant to create new rules for you as needed. Some starter rules you can try out are:
+
+- "Agent instruction files must mirror `AGENTS.md`"
+- "Package scripts must use `bunx` instead of `npx`"
+- "All dependencies in this workspace should use a central `catalog` definition"
+- "Generated docs must match their source files"
+
+More information on creating rules can [be found here.](/rule-design)
+
+Pokayoke ships with its own rules, which [are documented here.](/included-rules)

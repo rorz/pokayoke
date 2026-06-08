@@ -7,6 +7,8 @@ Developers already have good tools for many code quality attributes. [ESLint](ht
 
 However, a large class of more nebulous issues -- **repo conventions** -- often go unmaintained or are not automated because, by virtue of being specific conventions for a repository, they are harder to mold around opinionated tooling. Pokayoke aims to solve this by providing an unopinionated and extensible system for organizing custom repo-specific TypeScript logic.
 
+**Think of pokayoke as a tool to create deterministic guardrails for common pitfalls or established conventions.**
+
 ### A tool for an agent-first world
 
 Just as with humans, agents use code quality and analysis tooling in order to check their work and try to stay away from bugs. It is becoming a common practice with coding assistants to have a `check` command in `package.json` scripting.
@@ -19,7 +21,7 @@ Humans are stochastic by nature too, as much as we might not want to admit it! B
 
 Pokayoke is a tool for your repository that allows you to define arbitrary scripts, written in TypeScript, that can run against any or all of your codebase. It's fully-usable by humans, but realistically (and especially because it encourages traversing the TypeScript abstract syntax tree) it is designed to be used by agents under human instruction.
 
-## Rule design
+## Guardrail examples
 
 Good pokayoke rules usually look like this:
 
@@ -30,20 +32,12 @@ Good pokayoke rules usually look like this:
 - "This architectural boundary must not point backwards."
 
 These are not always elegant ESLint rules. Some need the whole repo. Some need
-package metadata. Some need generated artifacts.
-
-pokayoke's job is to turn those conventions into checks that are easy to run,
-hard to misunderstand, and explicit when suppressed.
+package metadata. Some need generated artifacts. Pokayoke's job is to turn those conventions into checks that are easy to run and hard to misunderstand.
 
 ## Design goals
 
 The design goals of pokayoke are to:
 
-- Support the creation of deterministic guardrails
-- Keep one, simple config file, with entirely optional defaults and presets
-
-- Support humans and agents with the same policy layer.
-- Keep project-wide rules first-class.
-- Make findings explain the convention, not just the violation.
-- Keep config readable and reviewable.
-- Prefer warnings for guidance and errors for real forcing functions.
+1. Support the creation of deterministic guardrails
+2. Keep one, simple config file, with entirely optional defaults and presets
+3. Provide an easy pathway for coding assistants to create sophisticated rules

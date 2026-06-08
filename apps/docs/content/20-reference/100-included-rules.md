@@ -1,7 +1,11 @@
 ---
 title: Included rules
-description: Published presets and built-in rule IDs.
+description: The full list of pre-written rules in pokayoke, and their corresponding identifiers.
 ---
+
+{% callout title="Use the current presets as a guide" tone="tip" %}
+The following presets are subject to change. "Recommended" presets might not work for your repo's current state. If the presets don't work for you, I would recommend instead that you don't start with any presets, and create your own rules.
+{% /callout %}
 
 | Preset | Includes |
 | --- | --- |
