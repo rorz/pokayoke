@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, MagnifyingGlass, X } from "@phosphor-icons/react";
 import Link from "next/link";
-
-import { type Doc, type NavSection, pathForDoc } from "../lib/docs";
+import type { Doc, NavSection } from "../lib/docs";
+import { pathForDoc } from "../lib/docs";
 
 export type SidebarHandoffLink = {
   direction: "back" | "forward";
@@ -77,7 +77,9 @@ export function DocsSidebar({
           >
             {handoffLink.direction === "back" ? <ArrowLeft aria-hidden="true" size={14} /> : null}
             <span>{handoffLink.label}</span>
-            {handoffLink.direction === "forward" ? <ArrowRight aria-hidden="true" size={14} /> : null}
+            {handoffLink.direction === "forward" ? (
+              <ArrowRight aria-hidden="true" size={14} />
+            ) : null}
           </Link>
         ) : null}
       </nav>

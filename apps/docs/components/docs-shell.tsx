@@ -1,18 +1,17 @@
 import Head from "next/head";
 import { useMemo, useState } from "react";
-
+import type { Doc, DocHeading } from "../lib/docs";
 import {
   audienceForDoc,
-  type Doc,
-  type DocHeading,
-  firstDocForAudience,
   docsNavSections,
+  firstDocForAudience,
   maintenanceNavSections,
   pathForDoc,
 } from "../lib/docs";
-import { DocsPager } from "./docs-pager";
 import { DocsFooter } from "./docs-footer";
-import { type SidebarHandoffLink, DocsSidebar } from "./docs-sidebar";
+import { DocsPager } from "./docs-pager";
+import type { SidebarHandoffLink } from "./docs-sidebar";
+import { DocsSidebar } from "./docs-sidebar";
 import { DocsToc } from "./docs-toc";
 import { DocsTopbar } from "./docs-topbar";
 
@@ -80,7 +79,9 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
           ) : null}
 
           <main className="min-w-0 lg:col-start-2">
-            <div className="mb-3 font-medium text-neutral-500 uppercase text-xs">{current.section}</div>
+            <div className="mb-3 font-medium text-neutral-500 uppercase text-xs">
+              {current.section}
+            </div>
             <h1 className="m-0 max-w-[760px] font-semibold text-3xl leading-[1.08] tracking-normal sm:text-[40px] text-red-500 font-stretch-semi-expanded">
               {current.title}
             </h1>
@@ -99,7 +100,9 @@ export function DocsShell({ current, headings, previous, next, children }: DocsS
   );
 }
 
-function handoffLinkForAudience(audience: ReturnType<typeof audienceForDoc>): SidebarHandoffLink | undefined {
+function handoffLinkForAudience(
+  audience: ReturnType<typeof audienceForDoc>,
+): SidebarHandoffLink | undefined {
   if (audience === "docs") {
     const maintenanceDoc = firstDocForAudience("maintenance");
     return maintenanceDoc
@@ -108,5 +111,7 @@ function handoffLinkForAudience(audience: ReturnType<typeof audienceForDoc>): Si
   }
 
   const docsDoc = firstDocForAudience("docs");
-  return docsDoc ? { direction: "back", href: pathForDoc(docsDoc), label: "Back to docs" } : undefined;
+  return docsDoc
+    ? { direction: "back", href: pathForDoc(docsDoc), label: "Back to docs" }
+    : undefined;
 }

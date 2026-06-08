@@ -1,3 +1,4 @@
+import type { Icon } from "@phosphor-icons/react";
 import {
   CheckCircle,
   Info,
@@ -5,7 +6,6 @@ import {
   SealWarning,
   Warning,
   WarningOctagon,
-  type Icon,
 } from "@phosphor-icons/react";
 
 import type { CalloutTone } from "../lib/github-callouts";
@@ -30,7 +30,9 @@ export function Callout({ title, tone = "note", children }: CalloutProps) {
   const CalloutIcon = styles.icon;
 
   return (
-    <aside className={["my-5 border-l-2 pl-4 text-[14px] text-neutral-700", styles.border].join(" ")}>
+    <aside
+      className={["my-5 border-l-2 pl-4 text-[14px] text-neutral-700", styles.border].join(" ")}
+    >
       {title ? (
         <div className={["mb-1 flex items-center gap-1.5 font-medium", styles.title].join(" ")}>
           <CalloutIcon aria-hidden="true" className="shrink-0" size={15} weight="bold" />

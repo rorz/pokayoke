@@ -1,4 +1,5 @@
-import { useRef, type CSSProperties, type PointerEvent } from "react";
+import type { CSSProperties, PointerEvent } from "react";
+import { useRef } from "react";
 
 import { PokayokeIcon } from "./brand-assets";
 
@@ -108,12 +109,7 @@ export function HomeAppIcon({ compact = false }: HomeAppIconProps) {
       ref={stageRef}
       style={compact ? compactIconStyle : fullIconStyle}
     >
-      <div
-        className={[
-          surfaceClass,
-          compact ? compactSurfaceClass : fullSurfaceClass,
-        ].join(" ")}
-      >
+      <div className={[surfaceClass, compact ? compactSurfaceClass : fullSurfaceClass].join(" ")}>
         <PokayokeIcon className={iconClass} />
       </div>
     </div>

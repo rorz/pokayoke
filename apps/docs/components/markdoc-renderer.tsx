@@ -1,8 +1,8 @@
 import Markdoc from "@markdoc/markdoc";
 import { Check, Copy } from "@phosphor-icons/react";
 import React, { useMemo, useState } from "react";
-
-import { codeBlockKey, type HighlightedCodeBlocks } from "../lib/code-blocks";
+import type { HighlightedCodeBlocks } from "../lib/code-blocks";
+import { codeBlockKey } from "../lib/code-blocks";
 import { slugify } from "../lib/docs";
 import { normalizeGithubCallouts } from "../lib/github-callouts";
 import { Callout } from "./callout";
@@ -153,6 +153,7 @@ function Fence({ content, language, highlightedCodeBlocks, children }: FenceProp
       </figcaption>
       <pre className="m-0 overflow-auto p-4 font-mono text-[13px] text-[#adbac7] leading-6 [tab-size:2]">
         {highlightedCode ? (
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Shiki emits escaped token markup for trusted code-block highlighting.
           <code className="whitespace-pre" dangerouslySetInnerHTML={{ __html: highlightedCode }} />
         ) : (
           <code className="whitespace-pre">{code}</code>

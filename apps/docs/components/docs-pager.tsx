@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import Link from "next/link";
-
-import { type Doc, pathForDoc } from "../lib/docs";
+import type { Doc } from "../lib/docs";
+import { pathForDoc } from "../lib/docs";
 
 type DocsPagerProps = {
   previous: Doc | undefined;

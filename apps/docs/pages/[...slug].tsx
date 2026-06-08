@@ -10,6 +10,10 @@ type DocRouteProps = {
   highlightedCodeBlocks: HighlightedCodeBlocks;
 };
 
+type DocRouteParams = {
+  slug?: string[] | string;
+};
+
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: docs.map((doc) => ({
     params: { slug: doc.slug.split("/") },
@@ -18,7 +22,8 @@ export const getStaticPaths: GetStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps<DocRouteProps> = async (context) => {
-  const slug = slugFromRouteParam(context.params?.["slug"]);
+  const params = context.params as DocRouteParams | undefined;
+  const slug = slugFromRouteParam(params?.slug);
   const doc = getDoc(slug);
 
   if (!doc) {
@@ -55,7 +60,10 @@ export default function DocRoute({ slug, highlightedCodeBlocks }: DocRouteProps)
         next={adjacent.next}
         previous={adjacent.previous}
       >
-        <MarkdocRenderer content={doc.content} highlightedCodeBlocks={effectiveHighlightedCodeBlocks} />
+        <MarkdocRenderer
+          content={doc.content}
+          highlightedCodeBlocks={effectiveHighlightedCodeBlocks}
+        />
       </DocsShell>
     </>
   );
@@ -74,6 +82,7 @@ function HighlightedCodeBlocksScript({
 
   return (
     <script
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: Data is JSON serialized and '<' escaped before writing the hydration script.
       dangerouslySetInnerHTML={{
         __html: `window.__POKAYOKE_HIGHLIGHTED_CODE_BLOCKS__=${serializeScriptData({
           blocks: highlightedCodeBlocks,
