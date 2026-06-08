@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PokayokeWordmark } from "./brand-assets";
 import { HomeAppIcon } from "./home-app-icon";
 
-const installCommand = "bunx skills add rorz/pokayoke";
+const installCommand = "npx skills add rorz/pokayoke";
 
 const copyTextWithSelection = (text: string) => {
   const textarea = document.createElement("textarea");

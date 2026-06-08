@@ -20,7 +20,7 @@ Pokayoke currently targets projects that use, or can run, the `bun` runtime.
 Install the agent skill:
 
 ```sh
-bunx skills add rorz/pokayoke
+npx skills add rorz/pokayoke
 ```
 
 Then prompt your agent with the repo convention you want to make checkable:

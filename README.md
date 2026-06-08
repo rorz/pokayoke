@@ -63,7 +63,7 @@ tests, formatting, or dependency checks.
 For agent setup:
 
 ```sh
-bunx skills add rorz/pokayoke
+npx skills add rorz/pokayoke
 ```
 
 ## Documentation
