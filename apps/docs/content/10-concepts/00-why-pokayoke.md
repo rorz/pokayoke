@@ -1,15 +1,25 @@
 ---
 title: Why pokayoke
-description: The policy layer pokayoke is meant to own.
+description: Some exposition on the rationale behind pokayoke's development
 ---
 
-# Why pokayoke
+Developers already have good tools for many code quality problems. [ESLint](https://eslint.org/) is good at file-local syntax, style, and code quality. [Biome](https://biomejs.dev) is great for formatting. [Knip](https://knip.dev) is good at project reachability: unused files, dependencies, exports, and binaries. 
 
-Teams already have good tools for many code quality problems.
+However, a large class of more nebulous issues -- **repo conventions** -- often go unmaintained or are not automated because, by virtue of being specific conventions for a repository, they are harder to mold around opinionated tooling. Pokayoke aims to solve this by providing an unopinionated and extensible system for organizing custom repo-specific TypeScript logic.
 
-ESLint is good at file-local syntax, style, and code quality. Knip is good at
-project reachability: unused files, dependencies, exports, and binaries.
-pokayoke is for repo policy that sits between those tools.
+### A tool for an agent-first world
+
+Just as with humans, agents use code quality and analysis tooling in order to check their work and try to stay away from bugs. It is becoming a common practice with coding assistants to have a `check` command in `package.json` scripting.
+
+`AGENTS.md` and `*/rules/*.md` files are _supposed_ to cover the remaining surface area for agents to keep themselves inline with repo documentation and conventions. However, because agents are stochastic by nature, it is not guaranteed that a convention in these rule files will be adhered to. The way to solve this problem is to **make recurrent pitfalls checkable deterministically.** 
+
+Humans are stochastic by nature too, as much as we might not want to admit it! Bigger teams historically solved the problem of repo convention adherence by creating their own custom scripting and tooling that ran alongside conventional tooling.
+
+> In Japanese, _poka-yoke_ means ["mistake-proofing" or "error-prevention".](https://en.wikipedia.org/wiki/Poka-yoke) It's a mechanic used -- for example -- in the design of the single-orientation USB-A and HDMI connectors.
+
+Pokayoke is a tool for your repository that allows you to define arbitrary scripts, written in TypeScript, that can run against any or all of your codebase. It's fully-usable by humans, but realistically (and especially because it encourages traversing the TypeScript abstract syntax tree) it is designed to be used by agents under human instruction.
+
+## Rule design
 
 Good pokayoke rules usually look like this:
 
@@ -33,10 +43,3 @@ hard to misunderstand, and explicit when suppressed.
 - Keep config readable and reviewable.
 - Prefer warnings for guidance and errors for real forcing functions.
 - Treat adapters as normal rules when another tool already owns the analysis.
-
-## Non-Goals
-
-- Replacing ESLint.
-- Replacing Knip.
-- Hiding arbitrary shell scripts behind a fancy name.
-- Baking one project's private conventions into the core package.

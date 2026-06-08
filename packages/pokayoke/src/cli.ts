@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { formatStylish, initProject, renderProjectSummary, runCheck } from "./index";
+import { formatCheckOutput, initProject, renderProjectSummary, runCheck } from "./index";
 
 function readOption(args: string[], name: string): string | undefined {
   const index = args.indexOf(name);
@@ -43,16 +43,14 @@ const command = args[0];
 if (!command) {
   await Bun.write(Bun.stdout, renderProjectSummary());
 } else if (command === "check") {
-  const format = readOption(args, "--format") ?? "stylish";
+  const rawFormat = readOption(args, "--format");
+  const format = rawFormat === "json" ? "json" : "stylish";
   const ruleId = readRuleId(args);
   const fix = args.includes("--fix");
+  const verbose = args.includes("--verbose");
   const result = await runCheck({ ...(ruleId ? { ruleId } : {}), fix });
 
-  if (format === "json") {
-    await Bun.write(Bun.stdout, `${JSON.stringify(result, null, 2)}\n`);
-  } else {
-    await Bun.write(Bun.stdout, formatStylish(result));
-  }
+  await Bun.write(Bun.stdout, formatCheckOutput(result, { format, verbose }));
 
   if (result.findings.some((finding) => finding.severity === "error")) {
     process.exitCode = 1;

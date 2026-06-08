@@ -35,7 +35,7 @@ export {
   syncGeneratedText,
 } from "./generated";
 export { type InitFileResult, type InitOptions, type InitResult, initProject } from "./init";
-export { formatStylish } from "./reporter";
+export { formatCheckOutput, formatStylish } from "./reporter";
 export {
   bundledPlugins,
   catalog,

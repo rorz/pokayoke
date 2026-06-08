@@ -29,13 +29,21 @@ type InlineCodeProps = {
   children?: React.ReactNode;
 };
 
+type LinkProps = {
+  href?: string;
+  title?: string;
+  children?: React.ReactNode;
+};
+
 const proseClassName = [
   "max-w-[760px] text-[15px] leading-7 text-neutral-800",
-  "[&_a]:font-medium [&_a]:text-neutral-950 [&_a]:underline [&_a]:decoration-neutral-300 [&_a]:underline-offset-4 [&_a:hover]:decoration-neutral-950",
+  "[&_a]:text-neutral-950 [&_a]:underline [&_a]:decoration-neutral-300 [&_a]:underline-offset-4 [&_a:hover]:decoration-neutral-950",
   "[&_blockquote]:my-5 [&_blockquote]:border-neutral-300 [&_blockquote]:border-l-2 [&_blockquote]:pl-4 [&_blockquote]:text-neutral-600",
   "[&_em]:text-neutral-800",
-  "[&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:scroll-mt-20 [&_h2]:font-semibold [&_h2]:text-[23px] [&_h2]:text-neutral-950 [&_h2]:leading-tight",
-  "[&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:scroll-mt-20 [&_h3]:font-semibold [&_h3]:text-[18px] [&_h3]:text-neutral-950 [&_h3]:leading-snug",
+  "[&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:scroll-mt-20 [&_h2]:font-bold [&_h2]:text-2xl [&_h2]:text-neutral-950 [&_h2]:leading-tight",
+  "[&_h2_a]:decoration-dotted",
+  "[&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:scroll-mt-20 [&_h3]:font-normal [&_h3]:text-xl [&_h3]:text-neutral-950 [&_h3]:leading-snug",
+  "[&_h3_a]:decoration-dotted",
   "[&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:scroll-mt-20 [&_h4]:font-medium [&_h4]:text-[15px] [&_h4]:text-neutral-950",
   "[&_hr]:my-8 [&_hr]:border-neutral-200",
   "[&_li]:my-1.5 [&_li]:pl-1",
@@ -82,6 +90,13 @@ const markdocConfig = {
         level: { type: Number, required: true, default: 1 },
       },
     },
+    link: {
+      render: "DocLink",
+      attributes: {
+        href: { type: String, required: true },
+        title: { type: String },
+      },
+    },
   },
 };
 
@@ -97,6 +112,7 @@ export function MarkdocRenderer({ content, highlightedCodeBlocks }: MarkdocRende
       components: {
         Callout,
         Fence: FenceWithHighlights,
+        DocLink,
         Heading,
         InlineCode,
       },
@@ -165,6 +181,25 @@ function InlineCode({ content, children }: InlineCodeProps) {
       {content ?? children}
     </code>
   );
+}
+
+function DocLink({ href = "", title, children }: LinkProps) {
+  const isExternal = isExternalHref(href);
+
+  return (
+    <a
+      href={href}
+      title={title}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+    >
+      {children}
+    </a>
+  );
+}
+
+function isExternalHref(href: string): boolean {
+  return /^(https?:)?\/\//i.test(href);
 }
 
 function textFromReact(node: React.ReactNode): string {

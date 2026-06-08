@@ -7,6 +7,11 @@ type ReporterOptions = {
   width?: number;
 };
 
+type CheckOutputOptions = ReporterOptions & {
+  format?: "json" | "stylish";
+  verbose?: boolean;
+};
+
 type ColorName = "blue" | "bold" | "cyan" | "dim" | "green" | "magenta" | "red" | "yellow";
 
 const codes: Record<ColorName, [number, number]> = {
@@ -19,6 +24,18 @@ const codes: Record<ColorName, [number, number]> = {
   red: [31, 39],
   yellow: [33, 39],
 };
+
+export function formatCheckOutput(result: CheckResult, options: CheckOutputOptions = {}): string {
+  if (options.format === "json") {
+    return `${JSON.stringify(result, null, 2)}\n`;
+  }
+
+  if (!options.verbose && result.findings.length === 0) {
+    return "";
+  }
+
+  return formatStylish(result, options);
+}
 
 export function formatStylish(result: CheckResult, options: ReporterOptions = {}): string {
   const color = options.color ?? shouldUseColor();
