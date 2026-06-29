@@ -8,15 +8,25 @@ import { initProject } from "./init";
 describe("initProject", () => {
   test("creates a root JSONC config and local rule folder", async () => {
     const root = await mkdtemp(`${tmpdir()}/pokayoke-init-`);
+    await Bun.write(`${root}/tsconfig.json`, "{}\n");
     const result = await initProject({ root });
 
     expect(result.files).toEqual([
       { path: "pokayoke.jsonc", status: "created" },
+      { path: ".pokayoke/tsconfig.json", status: "created" },
       { path: ".pokayoke/rules/no-root-source-files.rule.ts", status: "created" },
       { path: ".pokayoke/rules/no-root-source-files.test.ts", status: "created" },
     ]);
     expect(await Bun.file(`${root}/pokayoke.jsonc`).text()).toContain('"localRules"');
     expect(await Bun.file(`${root}/.pokayoke/config.ts`).exists()).toBe(false);
+    expect(JSON.parse(await Bun.file(`${root}/.pokayoke/tsconfig.json`).text())).toEqual({
+      extends: "../tsconfig.json",
+      compilerOptions: {
+        noEmit: true,
+        types: ["bun"],
+      },
+      include: ["rules/**/*.ts"],
+    });
     expect(await Bun.file(`${root}/.pokayoke/rules/no-root-source-files.rule.ts`).text()).toContain(
       "repo/no-root-source-files",
     );
@@ -33,6 +43,7 @@ describe("initProject", () => {
     expect(await initProject({ root })).toEqual({
       files: [
         { path: "pokayoke.jsonc", status: "skipped" },
+        { path: ".pokayoke/tsconfig.json", status: "skipped" },
         { path: ".pokayoke/rules/no-root-source-files.rule.ts", status: "skipped" },
         { path: ".pokayoke/rules/no-root-source-files.test.ts", status: "skipped" },
       ],
@@ -41,6 +52,24 @@ describe("initProject", () => {
 
     await initProject({ root, force: true });
     expect(await Bun.file(`${root}/pokayoke.jsonc`).text()).toContain('"localRules"');
+  });
+
+  test("creates a standalone local rule tsconfig when the root has no tsconfig", async () => {
+    const root = await mkdtemp(`${tmpdir()}/pokayoke-init-`);
+    await initProject({ root });
+
+    expect(JSON.parse(await Bun.file(`${root}/.pokayoke/tsconfig.json`).text())).toEqual({
+      compilerOptions: {
+        lib: ["ESNext"],
+        target: "ESNext",
+        module: "Preserve",
+        moduleResolution: "bundler",
+        strict: true,
+        noEmit: true,
+        types: ["bun"],
+      },
+      include: ["rules/**/*.ts"],
+    });
   });
 
   test("generated starter config loads and runs the local rule", async () => {

@@ -28,8 +28,8 @@ the policy depends on several files or the repository shape.
 
 ## Local Rule Files
 
-Local rules live in `.pokayoke/rules` and are loaded by the `localRules` globs
-in `pokayoke.jsonc`; bundled rule IDs live in [Rules](/rules).
+Local rules live in `.pokayoke/rules`, are loaded by the `localRules` globs in `pokayoke.jsonc`, and have bundled rule IDs in [Rules](/rules).
+`pokayoke init` also creates `.pokayoke/tsconfig.json` so editors and TypeScript language servers see Bun types for local rules without adding those files to your application build.
 
 ```jsonc
 {

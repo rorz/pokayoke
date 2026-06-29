@@ -60,10 +60,15 @@ bun run pokayoke check
 ```txt
 pokayoke.jsonc
 .pokayoke/
+  tsconfig.json
   rules/
     *.rule.ts
     *.test.ts
 ```
+
+The `.pokayoke/tsconfig.json` gives editors and TypeScript language servers
+Bun-aware types for local rules without adding those rules to your application
+build.
 
 
 ### Append pokayoke to your checks scripting
