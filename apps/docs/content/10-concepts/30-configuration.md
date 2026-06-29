@@ -19,7 +19,7 @@ and which rules are enabled.
 
 ```jsonc
 {
-  "$schema": "https://pokayoke.dev/schema.json",
+  "$schema": "https://pokayoke.codes/schema.json",
   "extends": ["pokayoke/recommended"],
   "localRules": [".pokayoke/rules/**/*.rule.ts"],
   "files": ["AGENTS.md", "README.md", "apps/**/*.ts", "packages/**/*.ts", "package.json"],

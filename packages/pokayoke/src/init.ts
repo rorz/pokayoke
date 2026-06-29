@@ -40,7 +40,7 @@ const pokayokeTsconfigStandalone = `{
 
 const files = {
   "pokayoke.jsonc": `{
-  "$schema": "https://pokayoke.dev/schema.json",
+  "$schema": "https://pokayoke.codes/schema.json",
   "extends": ["pokayoke/recommended"],
   "localRules": [".pokayoke/rules/**/*.rule.ts"],
   "files": ["AGENTS.md", "SKILL.md", "README.md", "apps/docs/content/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
