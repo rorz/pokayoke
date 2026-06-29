@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://pokayoke.dev/schema.json",
+  "$id": "https://pokayoke.codes/schema.json",
   "title": "pokayoke config",
   "type": "object",
   "additionalProperties": false,

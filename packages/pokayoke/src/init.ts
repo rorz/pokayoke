@@ -14,9 +14,33 @@ export type InitResult = {
   files: InitFileResult[];
 };
 
+const pokayokeTsconfigWithRoot = `{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["bun"]
+  },
+  "include": ["rules/**/*.ts"]
+}
+`;
+
+const pokayokeTsconfigStandalone = `{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "types": ["bun"]
+  },
+  "include": ["rules/**/*.ts"]
+}
+`;
+
 const files = {
   "pokayoke.jsonc": `{
-  "$schema": "https://pokayoke.dev/schema.json",
+  "$schema": "https://pokayoke.codes/schema.json",
   "extends": ["pokayoke/recommended"],
   "localRules": [".pokayoke/rules/**/*.rule.ts"],
   "files": ["AGENTS.md", "SKILL.md", "README.md", "apps/docs/content/**/*.md", "packages/**/*.json", "packages/**/*.ts", "package.json"],
@@ -99,13 +123,28 @@ describe("repo/no-root-source-files", () => {
 `,
 };
 
+async function initFiles(root: string): Promise<Record<string, string>> {
+  const hasRootTsconfig = await Bun.file(`${root}/tsconfig.json`).exists();
+
+  return {
+    "pokayoke.jsonc": files["pokayoke.jsonc"],
+    ".pokayoke/tsconfig.json": hasRootTsconfig
+      ? pokayokeTsconfigWithRoot
+      : pokayokeTsconfigStandalone,
+    ".pokayoke/rules/no-root-source-files.rule.ts":
+      files[".pokayoke/rules/no-root-source-files.rule.ts"],
+    ".pokayoke/rules/no-root-source-files.test.ts":
+      files[".pokayoke/rules/no-root-source-files.test.ts"],
+  };
+}
+
 export async function initProject(options: InitOptions = {}): Promise<InitResult> {
   const root = options.root ?? process.cwd();
   const results: InitFileResult[] = [];
 
   await mkdir(`${root}/.pokayoke/rules`, { recursive: true });
 
-  for (const [path, content] of Object.entries(files)) {
+  for (const [path, content] of Object.entries(await initFiles(root))) {
     const target = `${root}/${path}`;
     const exists = await Bun.file(target).exists();
 

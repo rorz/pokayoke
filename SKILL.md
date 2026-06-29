@@ -17,8 +17,10 @@ project-specific TypeScript conventions.
 3. Run `pokayoke init`.
 4. Add `pokayoke check` to the existing verification script.
 5. Keep repo-owned rules in `.pokayoke/rules/**/*.rule.ts`.
-6. Add focused tests beside local rules.
-7. Run the repo's full check before handing work back.
+6. Keep the generated `.pokayoke/tsconfig.json`; it gives editors Bun-aware
+   types for local rule files without adding them to the app build.
+7. Add focused tests beside local rules.
+8. Run the repo's full check before handing work back.
 
 For Bun:
 
