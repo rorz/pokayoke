@@ -1,6 +1,6 @@
 {
   "name": "pokayoke",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "repo-policy tooling for convention checks that humans and agents can both run",
   "license": "MIT",
   "type": "module",
