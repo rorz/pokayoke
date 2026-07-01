@@ -27,10 +27,13 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 .wrangler
 .vinext
-*.tsbuildinfo
+*.tsbuildinf
 
 # IntelliJ based IDEs
 .idea
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Dogfooding
+.pokayoke
